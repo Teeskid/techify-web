@@ -1,0 +1,22 @@
+﻿
+
+but are
+We use Cookies to enhance the performance and functionality of our non-essential to their use. However, without these cookies, certain functionality like videos may become unavailable or you would be required to enter your
+login details every time you visit the
+you had logged in previously.
+• Local Storage
+as we would not be able to remember that
+Local Storage sometimes known as DOM storage, provides web apps with methods and protocols for storing client-side data. Web storage supports persistent data storage, similar to cookies but with a greatly enhanced capacity and no information stored in the HTTP request header.
+• Sessions
+Information about General Data Protection Regulation (GDPR)
+uses "Sessions" to identify the areas of our website that you have visited. A Session is a small piece of data stored on your computer or mobile device by your web browser.
+PREVIEW
+We may be collecting and using information from you if you are from the European Economic Area (EEA), and in this section of our Privacy Policy we are going to explain exactly how and why is this data collected, and how we maintain this data under protection from being replicated or used in the wrong way.
+What is GDPR?
+GDPR is an EU-wide privacy and data protection law that regulates how EU residents' data is protected by companies and enhances the control the EU residents have, over their personal
+The GDPR is relevant to any globally operating company and not just the EU-based businesses and EU residents. Our customers' data is important irrespective of where they are located, which is why we have implemented GDPR controls as our baseline standard for all our operations
+worldwide.
+What is personal data?
+Any data that relates to an identifiable or identified individual. GDPR covers a broad spectrum of information that could be used on its own, or in combination with other pieces of information, to identify a person. Personal data extends beyond a person's name or email address. Some examples include financial information, political opinions, genetic data, biometric data, IP addresses, physical address, sexual orientation, and ethnicity.
+The Data Protection Principles include requirements such as:
+Personal data collected must be processed in a fair, legal, and transparent way and should only be used in a way that a person would reasonably expect.

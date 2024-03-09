@@ -1,0 +1,20 @@
+﻿
+
+Changes To Our Privacy Policy
+We may change our Service and policies, and we may need to make changes to this Privacy Policy so that they accurately reflect our Service and policies. Unless otherwise required by law, we will notify you (for example, through our Service) before we make changes to this Privacy Policy and give you an opportunity to review them before they go into effect. Then, if you continue to use the Service, you will be bound by the updated Privacy Policy. If you do not want to agree to this or any updated Privacy Policy, you can delete your account.
+Third-Party Services
+We may display, include or make available third-party content (including data, information, applications and other products services) or provide links to third-party websites or services ("Third-Party Services").
+You acknowledge and agree that
+shall not be responsible for any Third-Party Services, including their accuracy, completeness, timeliness, validity, copyright compliance, legality, decency, quality or any other aspect thereof. does not assume and shall
+not have any liability or responsibility to you or any other person or entity for any Third-Party Services.
+Third-Party Services and links thereto are provided solely as a convenience to you and you access and use them entirely at your own risk and subject to such third parties' terms and conditions.
+Facebook Pixel
+Facebook pixel is an analytics tool that allows you to measure the effectiveness of your advertising by understanding the actions people take on your website. You can use the pixel to: Make sure your ads are shown to the right people. Facebook pixel may collect
+information from your device when you use the service. Facebook pixel collects information that is held in accordance with its Privacy Policy.
+Tracking Technologies
+•
+Google Maps APIs
+Google Maps API is a robust tool that can be used to create a custom map, a searchable map, check-in functions, display live data synching with location, plan routes, or create a mashup just to name a few.
+Google Maps API may collect information from You and from Your Device for security purposes.
+Google Maps API collects information that is held in accordance with its Privacy Policy
+• Cookies

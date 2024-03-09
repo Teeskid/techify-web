@@ -1,0 +1,26 @@
+﻿
+
+interest you.
+Website:
+'s site, which can be accessed via this URL:
+• You: a person or entity that is registered with
+Information automatically collected
+to use the Services.
+There is some information like your Internet Protocol (IP) address and/or browser and device characteristics - is collected automatically when you visit our platform. This information may be used to connect your computer to the Internet. Other information collected automatically could be a login, e-mail address, password, computer and connection information such as browser plug-in types and versions and time zone setting, operating systems and platforms, purchase history, (we sometimes aggregate with similar information from other Users), the full Uniform Resource Locator (URL) clickstream to, through and from our Website that may include date and time; cookie number; parts of the site you viewed or searched for; and the phone number you used to call our Customer Services. We may also use browser data such as cookies, Flash cookies (also known as Flash Local Shared Objects) or similar data on certain parts of our Website for fraud prevention and other purposes. During your visits, we may use software tools such as JavaScript to measure and collect session information including page response times, download errors, length of visits to certain pages, page interaction information (such as scrolling, clicks, and mouse-overs), and methods used to browse away from the page. We may also collect technical information to help us identify your device for fraud prevention and diagnostic purposes. We automatically collect certain information when you visit, use or navigate the platform. This information does not reveal your specific identity (like your name or contact information) but may include device and usage information, such as your IP address, browser and device characteristics, operating system, language preferences, referring URLs, device name, country, location, information about who and when you use our and other technical information. This information is primarily needed to maintain the security and operation of our platform, and for our internal analytics and reporting purposes.
+What Information Do We Collect?
+We collect information from you when you visit our
+."
+register on our site, place an
+order, subscribe to our newsletter, respond to a survey or fill out a form.
+Name / Username
+Phone Numbers
+Email Addresses
+•
+Mailing Addresses
+Job Titles
+Billing Addresses
+•
+Debit/credit card numbers
+•
+Age
+Password

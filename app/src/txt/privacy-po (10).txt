@@ -1,0 +1,18 @@
+﻿
+
+•
+Personal data should only be collected to fulfil a specific purpose and it should only be used for that purpose. Organizations must specify why they need the personal data when they collect it.
+Personal data should be held no longer than necessary to fulfil its purpose.
+People covered by the GDPR have the right to access their own personal data. They can also request a copy of their data, and that their data be updated, deleted, restricted, or moved to another organization.
+Why is GDPR important?
+GDPR adds some new requirements regarding how companies should protect individuals' personal data that they collect and process. It also raises the stakes for compliance by increasing enforcement and imposing greater fines for breach. Beyond these facts it's simply the right thing to do. At Help Scout we strongly believe that your data privacy is very important and we already have solid security and privacy practices in place that go beyond the requirements of this new regulation.
+Individual Data Subject's Rights - Data Access, Portability and Deletion
+We are committed to helping our customers meet the data subject rights requirements of GDPR. processes or stores all personal data in fully vetted, DPA compliant vendors. We do store all conversation and personal data for up to 6 years unless your account is deleted. In which case, we dispose of all data in accordance with our Terms of Service and Privacy Policy, but we will not hold it longer than 60 days.
+We are aware that if you are working with EU customers, you need to be able to provide them with the ability to access, update, retrieve and remove personal data. We got you! We've been set up as self service from the start and have always given you access to your data and your customers data. Our customer support team is here for you to answer any questions you might have about working with the API.
+California Residents
+The California Consumer Privacy Act (CCPA) requires us to disclose categories of Personal Information we collect and how we use it, the categories of sources from whom we collect Personal Information, and the third parties with whom we share it, which we have explained above.
+We are also required to communicate information about rights California residents have under California law. You may exercise the following rights:
+Right to Equal Service. We will not discriminate against you if you exercise your privacy rights.
+Right to Delete. You may submit a verifiable request to close your account and we will delete Personal Information about you that we have collected.
+Request that a business that sells a consumer's personal data, not sell the consumer's personal data.
+Right to Know and Access. You may submit a verifiable request for information regarding the: (1) categories of Personal Information we collect, use, or share; (2) purposes for which

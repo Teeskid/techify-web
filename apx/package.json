@@ -1,0 +1,27 @@
+{
+  "name": "techify-apx",
+  "version": "0.1.1",
+  "author": "Teeskid",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./consts": "./consts.js",
+    "./types/admin": "./types/admin/index.js",
+    "./types": "./types/index.js"
+  },
+  "types": "./types",
+  "scripts": {
+    "build": "npx tsc",
+    "watch": "npx tsc --watch"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "typescript": "~5.3.3"
+  },
+  "description": ""
+}

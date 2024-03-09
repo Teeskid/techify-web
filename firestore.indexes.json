@@ -1,0 +1,289 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "dst",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "dst",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "dst",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "typ",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "dst",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "typ",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "sta",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "sta",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "typ",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "typ",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "dst",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "dst",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "typ",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dat",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "tlcms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "ena",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "aid",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "vtu-items",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "cat",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "aid",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "vtu-items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "ena",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "stk",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "typ",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "vtu-items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "ena",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "vol",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "typ",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "vtu-items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "stk",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "typ",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "vtu-telco",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "prd",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "aid",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "ivhs",
+      "fieldPath": "dat",
+      "ttl": false,
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "DESCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        },
+        {
+          "order": "DESCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ivhs",
+      "fieldPath": "inf",
+      "ttl": false,
+      "indexes": []
+    }
+  ]
+}

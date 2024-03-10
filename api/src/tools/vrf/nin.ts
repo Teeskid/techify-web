@@ -5,7 +5,7 @@ import { getFirestore } from "firebase-admin/firestore"
 
 import type { NINDetails } from "../../types/vrf"
 import { requestRef } from "../../utils"
-import { sanifyDetails } from "../../utils/vrf"
+import { sanifyDetails } from "../../utils/vrf/nin"
 
 if (!process.env.VRF_API_V1_XAUTH)
 	throw new Error("missing env variables")

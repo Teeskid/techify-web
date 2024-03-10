@@ -2,7 +2,6 @@ require("dotenv").config();
 
 import parser from "body-parser";
 import express, { type Request } from "express";
-import expressWs from "express-ws";
 import { applicationDefault, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import path from "path";
@@ -14,14 +13,13 @@ process.on("SIGINT", () => {
 	process.kill(process.pid)
 })
 
-initializeApp({
+const firebase = initializeApp({
 	credential: applicationDefault(),
 	projectId: "techify-ng"
 })
+const firestore = getFirestore(firebase)
 
-const webSock = expressWs(express())
-const app = webSock.app
-
+const app = express();
 app.set("view engine", "ejs")
 app.use(parser.json())
 app.use(parser.urlencoded({ extended: false }))
@@ -33,7 +31,6 @@ const doOnce = async (r: Request) => {
 	const dat = Date.now()
 
 	// put them in database
-	const firestore = getFirestore()
 	const logs = firestore.collection("logs")
 	await logs.doc().create({
 		url,
@@ -53,13 +50,6 @@ app.use((r, res, next) => {
 	doOnce(r)
 	// handle next route
 	next()
-})
-
-// websocket handler
-app.ws("/", (ws) => {
-	ws.on("message", () => {
-		console.log("RECEIVED")
-	})
 })
 
 // attach main routes

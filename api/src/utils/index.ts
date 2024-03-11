@@ -1,5 +1,5 @@
-// import fs from "fs"
-// import path from "path"
+/** @module utils */
+
 import { getAuth, type DecodedIdToken } from "firebase-admin/auth"
 import { getFirestore } from "firebase-admin/firestore"
 
@@ -19,6 +19,7 @@ export const decodeToken = async (rawToken: string): Promise<DecodedIdToken> => 
 export const cacheRequest = async (r: string, data: object) => {
 	await getFirestore().collection("data").doc().create({
 		url: r,
+		arg: r,
 		ext: data,
 		dat: Date.now()
 	})

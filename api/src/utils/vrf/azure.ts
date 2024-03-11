@@ -7,7 +7,8 @@ const azure = axios.create({
 	headers: {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
-	}
+	},
+	timeout: 60000
 })
 
 const verifyNIN = async (ninNumber: string) => {

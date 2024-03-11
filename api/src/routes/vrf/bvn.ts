@@ -8,7 +8,12 @@ bvn.get("/", (r, res) => {
 	res.sendStatus(200)
 })
 
-bvn.get("/data", async (r: Request, res: Response) => {
+bvn.get("/match", async (r: Request, res: Response) => {
+	res.json({ code: 200, text: "success" })
+})
+
+bvn.get("/details", async (r: Request, res: Response) => {
+	const isDisplay = String(r.query.isDisplay).trim()
 	const bvnNumber = String(r.query.bvnNumber).trim()
 	try {
 		if (bvnNumber.length !== 11) {
@@ -19,7 +24,11 @@ bvn.get("/data", async (r: Request, res: Response) => {
 			return
 		}
 		const data = await verifyBVN("azure", bvnNumber)
-		res.json(data)
+		if (isDisplay === "html") {
+			res.render("bvn/details")
+		} else {
+			res.json(data)
+		}
 	} catch (error: Error | unknown) {
 		res.json({
 			code: 500,

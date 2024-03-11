@@ -6,6 +6,9 @@
   "engines": {
     "node": ">=18 <=20.11.1"
   },
+  "nodemonConfig": {
+    "ignore": ["**/dist/**", "**/src/static/**", "**/src/mocks/**"]
+  },
   "scripts": {
     "build": "npx tsc",
     "watch": "npx tsc --watch",

@@ -4,11 +4,11 @@
 	},
 	"firestore": {
 		"rules": "firestore.rules",
-		"indexes": "firestore.indexes.json"
+		"indexes": "firestore-indexes.json"
 	},
 	"functions": [
 		{
-			"source": "cld",
+			"source": "api",
 			"codebase": "default",
 			"ignore": [
 				"venv",
@@ -22,7 +22,10 @@
 		{
 			"site": "techify-ng",
 			"public": "app/dist",
+			"predeploy": "yarn --cwd app build",
 			"ignore": [
+				"api/**",
+				"apx/**",
 				"firebase.json",
 				"**/.*",
 				"**/node_modules/**"

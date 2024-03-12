@@ -1,0 +1,118 @@
+<!doctype html>
+<html class="loaded" lang="en" data-textdirection="ltr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        /* Media query for mobile phones */
+        @media screen and (max-width: 480px) {
+            table {
+                font-size: 5px !important;
+            }
+
+            .photo {
+                max-width: 40px;
+            }
+
+            .note-text {
+                font-size: 6px !important;
+            }
+        }
+
+        /* Extra Small Devices (phones) */
+        @media screen and (max-width: 575.98px) {
+            table {
+                font-size: 5px !important;
+            }
+
+            .photo {
+                max-width: 50px;
+            }
+        }
+
+        /* Small Devices (tablets) */
+        @media screen and (min-width: 576px) and (max-width: 767.98px) {
+            table {
+                font-size: 10px !important;
+            }
+
+            .photo {
+                max-width: 60px;
+            }
+
+            .note-text {
+                font-size: 10px !important;
+            }
+        }
+
+        /* Medium Devices (landscape tablets) */
+        @media screen and (min-width: 768px) and (max-width: 991.98px) {
+            table {
+                font-size: 12px !important;
+            }
+
+            .photo {
+                max-width: 70px;
+            }
+
+            .note-text {
+                font-size: 10px !important;
+            }
+        }
+
+        /* Large Devices (laptops and desktops) */
+        @media screen and (min-width: 992px) and (max-width: 1199.98px) {
+            table {
+                font-size: 12px !important;
+            }
+
+            .photo {
+                max-width: 100px;
+            }
+
+            .note-text {
+                font-size: 10px !important;
+            }
+        }
+
+        /* Extra Large Devices (large desktops) */
+        @media screen and (min-width: 1200px) {
+            table {
+                font-size: 12px !important;
+            }
+
+            .photo {
+                max-width: 100px;
+            }
+
+            .note-text {
+                font-size: 10px !important;
+            }
+        }
+    </style>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="MacChin">
+    <title>Techify VRF - BVN Slip Printing</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://idpass.com.ng/assets/images/favicon.png">
+</head>
+
+<body>
+    <table>
+    	<tbody>
+    		<tr>
+    			<td class="photo">
+    				<img src="<%= photoData %>" alt="<%= bvnNumber %>" />
+    			</td>
+    			<td>
+    				<span>FIRST NAME: <%= firstName %></span>
+    				<span>MIDDLE NAME: <%= middleName %></span>
+    				<span>LAST NAME: <%= lastName %></span>
+    			</td>
+    		</tr>
+    	</tbody>
+    </table>
+</body>
+
+</html>

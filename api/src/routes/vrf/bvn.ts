@@ -1,5 +1,6 @@
+/** @module routes/vrf/bvn */
+
 import { Router as createRouter, type Request, type Response } from "express";
-import fs from "fs"
 
 import { verifyBVN } from "../../tools/vrf/bvn"
 
@@ -24,10 +25,9 @@ bvn.get("/details", async (r: Request, res: Response) => {
 			})
 			return
 		}
-		const data = fs.readFileSync("mocks/bvn-full-details.json") || await verifyBVN("azure", bvnNumber)
-		console.log(data)
+		const data = await verifyBVN("seamfix", bvnNumber)
 		if (isDisplay === "html") {
-			res.render("vrf/bvn-slip")
+			res.render("vrf/bvn-slip", data)
 		} else {
 			res.json(data)
 		}

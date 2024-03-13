@@ -8,7 +8,7 @@ const azure = axios.create({
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
 	},
-	timeout: 60000
+	timeout: 6000
 })
 
 const verifyNIN = async (ninNumber: string) => {
@@ -35,6 +35,8 @@ const verifyBVN = async (bvnNumber: string) => {
 		address: data.residentialAddress,
 		dateOfBirth: data.dateOfBirth,
 		phoneNumber: data.phoneNumber,
+		photoData: "",
+		bvnNumber
 	}
 }
 

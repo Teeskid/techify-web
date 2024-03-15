@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { FirestoreDataConverter, QueryDocumentSnapshot } from "firebase-admin/firestore"
 
-import type { App, Bank, Message, Order, Stat, TelecomProduct, User, Wallet } from "techify-apx/types"
-import type { ApiMeta, CableItem, DiscoItem, EduStuff, ExamChecker, Telecom } from "techify-apx/types/admin"
+import type { App, Bank, Message, Order, Stat, TelecomProduct, User, Wallet } from "apx/types"
+import type { ApiMeta, CableItem, DiscoItem, EduStuff, ExamChecker, Telecom } from "apx/types/admin"
 
 export const createConverter = <T extends { doc: string }>(): FirestoreDataConverter<T> => ({
     toFirestore({ doc, ...invoiceItem }: T) {

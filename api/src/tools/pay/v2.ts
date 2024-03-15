@@ -1,8 +1,8 @@
 /** @module apx-library/payment/v2 */
 import axios, { type AxiosInstance } from "axios"
 
-import { BUSINESS_NAME } from "techify-apx/consts"
-import type { AccountInfo, Bank, Transfer, Virtual } from "techify-apx/types"
+import { BUSINESS_NAME } from "apx/consts"
+import type { AccountInfo, Bank, Transfer, Virtual } from "apx/types"
 
 import { DEBUG_MODE } from "../../utils/vtu/const"
 import { localPhone, reportError, shortId } from "../../utils/vtu/utils"

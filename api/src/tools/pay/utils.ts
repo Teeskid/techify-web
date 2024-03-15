@@ -1,4 +1,4 @@
-import type { PaymentChannelKey } from "techify-apx/types"
+import type { PaymentChannelKey } from "apx/types"
 
 import type { Server } from "./types"
 

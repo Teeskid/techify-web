@@ -2,7 +2,7 @@
 import * as https from "https"
 
 import { isAxiosError, type AxiosInstance } from "axios"
-import type { AccountInfo, Bank, Transfer, Virtual } from "techify-apx/types"
+import type { AccountInfo, Bank, Transfer, Virtual } from "apx/types"
 import axios from "../../utils/vtu/axios"
 import { DEBUG_MODE, REQUEST_TIMEOUT } from "../../utils/vtu/const"
 import { codedPhone } from "../../utils/vtu/utils"

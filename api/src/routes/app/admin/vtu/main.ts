@@ -3,7 +3,7 @@ import { FieldValue, getFirestore } from "firebase-admin/firestore"
 import { HttpsError } from "firebase-functions/v2/https"
 import { type AuthData } from "firebase-functions/v2/tasks"
 
-import type { Order, UserRole } from "techify-apx/types"
+import type { Order, UserRole } from "apx/types"
 
 import { chargeWallet as _chargeWallet } from "../../apx-library/internal/users"
 import { OrderConv, UserConv, WalletConv } from "../../apx-utility/convs"

@@ -1,7 +1,7 @@
 /** @module apx-library/payment/v3 */
 import axios, { isAxiosError, type AxiosInstance } from "axios"
 
-import type { AccountInfo, Bank, Transfer, Virtual } from "techify-apx/types"
+import type { AccountInfo, Bank, Transfer, Virtual } from "apx/types"
 
 import { DEBUG_MODE } from "../../utils/vtu/const"
 import { shortId } from "../../utils/vtu/utils"

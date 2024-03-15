@@ -8,7 +8,7 @@ import { promisify } from "util"
 import { CloudEvent } from "firebase-functions/v2"
 import { MessagePublishedData } from "firebase-functions/v2/pubsub"
 
-import { UserRole } from "techify-apx/types"
+import { UserRole } from "apx/types"
 
 import { updateConfig, updatePayments, updateProducts } from "../tools/vtu/update"
 import { sendText } from "../tools/msn"

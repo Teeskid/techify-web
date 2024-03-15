@@ -1,7 +1,7 @@
 import { HttpsError } from "firebase-functions/v2/https"
 import { type AuthData } from "firebase-functions/v2/tasks"
 
-import type { PaymentChannelKey, ProductChannelKey } from "techify-apx/types"
+import type { PaymentChannelKey, ProductChannelKey } from "apx/types"
 import { getMeta } from "../../apx-utility/utils"
 
 const reload = async (auth: object, data: object): Promise<object> => {

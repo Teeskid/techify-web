@@ -2,7 +2,7 @@ import { getFirestore } from "firebase-admin/firestore"
 import { HttpsError } from "firebase-functions/v2/https"
 import { type AuthData } from "firebase-functions/v2/tasks"
 
-import type { Bank, UserType } from "techify-apx/types"
+import type { Bank, UserType } from "apx/types"
 
 import { createVirtual as _updateVirtual } from "../../apx-library/payment/virtuals"
 import { BankConv, UserConv, WalletConv } from "../../apx-utility/convs"

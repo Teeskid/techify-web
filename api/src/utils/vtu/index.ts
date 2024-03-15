@@ -1,7 +1,7 @@
 import * as crypto from "crypto"
 
-import type { Bank, PaymentChannelKey, ProductChannelKey } from "techify-apx/types"
-import type { Product } from "techify-apx/types/admin"
+import type { Bank, PaymentChannelKey, ProductChannelKey } from "apx/types"
+import type { Product } from "apx/types/admin"
 
 import axios from "./axios"
 import { SHARDS_COUNT } from "./const"

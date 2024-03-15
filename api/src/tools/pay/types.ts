@@ -1,4 +1,4 @@
-import type { AccountInfo, Bank, Transfer, Virtual } from "techify-apx/types"
+import type { AccountInfo, Bank, Transfer, Virtual } from "apx/types"
 
 export type SrvInfo = {
     bal: number

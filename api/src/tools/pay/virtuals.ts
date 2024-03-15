@@ -1,4 +1,4 @@
-import type { PaymentChannelKey, User, Virtual } from "techify-apx/types"
+import type { PaymentChannelKey, User, Virtual } from "apx/types"
 
 import { isValidEmail, isValidName, isValidPhone } from "../../utils/vtu"
 import type { Server } from "./types"

@@ -2,8 +2,8 @@ import { getFirestore } from "firebase-admin/firestore"
 import { getDownloadURL, getStorage } from "firebase-admin/storage"
 import { type Change, type DocumentSnapshot, type FirestoreEvent } from "firebase-functions/v2/firestore"
 
-import { PAYMENT_CHANNELS, SSCEEXAM_CODES, TEL_PRODUCTS } from "techify-apx/consts"
-import type { ExamChecker, Telecom } from "techify-apx/types/admin"
+import { PAYMENT_CHANNELS, SSCEEXAM_CODES, TEL_PRODUCTS } from "apx/consts"
+import type { ExamChecker, Telecom } from "apx/types/admin"
 
 import type { EventProps } from "../../types/vtu"
 import { CONTENT_JSON } from "../../utils/vtu/const"

@@ -1,8 +1,8 @@
 import { getFirestore } from "firebase-admin/firestore"
 
-import type { AccountInfo, PaymentChannelKey } from "techify-apx/types"
+import type { AccountInfo, PaymentChannelKey } from "apx/types"
 
-import { PaymentMetaData } from "techify-apx/types/admin"
+import { PaymentMetaData } from "apx/types/admin"
 import { BankConv } from "../../utils/vtu/convs"
 import { MERGE_DOC } from "../../utils/vtu/utils"
 import type { Server } from "./types"

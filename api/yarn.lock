@@ -1786,7 +1786,7 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-"techify-apx@file:../apx":
+"apx@file:../apx":
   version "0.1.1"
 
 teeny-request@^9.0.0:

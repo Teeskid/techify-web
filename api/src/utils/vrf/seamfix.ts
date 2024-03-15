@@ -2,7 +2,7 @@
 
 import axios, { type AxiosError } from "axios"
 
-import { requestRef, cacheRequest } from "../../utils"
+import { cacheRequest, requestRef } from "../../utils"
 
 if (!process.env.VRF_API_V1_XUSER || !process.env.VRF_API_V1_TOKEN)
 	throw new Error("missing env variables")
@@ -41,32 +41,31 @@ const verifyNIN = async (ninNumber: string) => {
 	await cacheRequest(ninNumber, data)
 	if (data.error !== undefined)
 		return data
+	const details = data.response
 	return {
-		...data,
-		/*
-		firstName: data.firstName,
-		middleName: data.middleName,
-		lastName: data.lastName,
-		gender: data.gender,
-		address: data.residentialAddress,
-		dateOfBirth: data.dateOfBirth,
-		phoneNumber: data.phoneNumber,
-		photoData: "",
-		qrCodeData: "",
-		issueDate: "12-11-2023",
-		*/
+		firstName: details.firstName,
+		lastName: details.surname,
+		middleName: details.middleName,
+		dateOfBirth: details.dateOfBirth,
+		phoneNumber: details.trustedNumber,
+		gender: details.gender,
+		userId: details.userid,
+		photoData: details.photo,
+		issueDate: new Date(details.ts).toTimeString(),
+		vNinNumber: details.vNIN,
 		ninNumber
 	}
 }
 
-const verifyVNIN = async (ninNumber: string) => {
+const verifyVNIN = async (vNinNumber: string) => {
 	const { data } = await seamFix.post("/", {
-		'searchParameter': ninNumber,
-		'verificationType': 'VNIN-SEARCH',
+		"countryCode": "NG",
+		'searchParameter': vNinNumber || "SF895332826955L0",
+		'verificationType': "V-NIN",
 		'transactionReference': requestRef()
 	}, {
 		headers: {
-			'apiKey': ninKey2,
+			'apiKey': ninKey1,
 		}
 	}).catch((error: AxiosError) => ({
 		data: {
@@ -75,24 +74,22 @@ const verifyVNIN = async (ninNumber: string) => {
 		}
 	}))
 	console.log(data)
-	await cacheRequest(ninNumber, data)
-	if (data.error !== undefined)
+	await cacheRequest(vNinNumber, data)
+	if (data.error !== undefined || data.response.responseCode !== "00")
 		return data
+	const details = data.response
 	return {
-		...data,
-		/*
-		firstName: data.firstName,
-		middleName: data.middleName,
-		lastName: data.lastName,
-		gender: data.gender,
-		address: data.residentialAddress,
-		dateOfBirth: data.dateOfBirth,
-		phoneNumber: data.phoneNumber,
-		photoData: "",
+		firstName: details.firstName,
+		lastName: details.surname,
+		middleName: details.middleName,
+		dateOfBirth: details.dateOfBirth,
+		gender: details.gender,
+		userId: details.userid,
+		photoData: details.photo,
+		issueDate: new Date(details.ts).toTimeString(),
+		phoneNumber: details.trustedNumber,
+		vNinNumber: details.vNIN,
 		qrCodeData: "",
-		issueDate: "12-11-2023",
-		*/
-		ninNumber
 	}
 }
 
@@ -103,7 +100,7 @@ const verifyNIN2 = async (ninNumber: string) => {
 		'transactionReference': requestRef()
 	}, {
 		headers: {
-			'apiKey': ninKey1,
+			'apiKey': ninKey2,
 		}
 	}).catch((error: AxiosError) => ({
 		data: {

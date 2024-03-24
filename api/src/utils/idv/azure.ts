@@ -1,4 +1,4 @@
-/** @module utils/vrf/azure */
+/** @module utils/idv/azure */
 
 import axios, { type AxiosError } from "axios"
 
@@ -8,12 +8,34 @@ const azure = axios.create({
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
 	},
-	timeout: 6000
+	timeout: 60000
 })
 
 const verifyNIN = async (ninNumber: string) => {
-	console.error(ninNumber)
-	throw new Error("unimplemented")
+	// console.error(ninNumber)
+	// throw new Error("unimplemented")
+	const { data } = await azure.post("/ninvalidationsimple/", {
+		nin: ninNumber
+	}).catch((error: AxiosError) => ({
+		data: {
+			error: error.message,
+			data: error.response?.data
+		}
+	}))
+	console.log(data)
+	if (data.error !== undefined)
+		return data
+	return {
+		firstName: data.firstName,
+		middleName: data.middleName,
+		lastName: data.lastName,
+		gender: data.gender,
+		address: data.residentialAddress,
+		dateOfBirth: data.dateOfBirth,
+		phoneNumber: data.phoneNumber,
+		photoData: "",
+		ninNumber
+	}
 }
 
 const verifyBVN = async (bvnNumber: string) => {

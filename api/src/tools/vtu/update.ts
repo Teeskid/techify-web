@@ -156,6 +156,7 @@ export const updatePayments = async (event: FirestoreEvent<Change<DocumentSnapsh
     const firestore = getFirestore()
     const paymentRef = firestore.doc('_meta/payment').withConverter(ApiMetaConv)
     const bucket = getStorage().bucket()
+    // save to storage
     await Promise.all(
         PAYMENT_CHANNELS.map(async (channel) => {
             const banksRef = paymentRef.collection(`banks-${channel}`).orderBy("name")

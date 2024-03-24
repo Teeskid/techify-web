@@ -1,9 +1,9 @@
-/** @module utils/vrf/bvn */
+/** @module utils/idv/bvn */
 
 import fs from "fs"
 import path from "path"
 
-import type { BVNDetails } from "../../types/vrf";
+import type { BVNDetails } from "../../types/idv";
 import { INTL_DATE_FORMAT } from "../"
 
 export const sanifyDetails = (details: object): BVNDetails => {
@@ -46,3 +46,5 @@ export const readBVNMock = (bvnNumber: string): BVNDetails => {
 		bvnNumber,
 	}
 }
+
+export default {}

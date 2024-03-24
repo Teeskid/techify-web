@@ -1,25 +1,16 @@
-import { exec } from "child_process"
+import { Router as createRouter } from "express"
 import { getAuth, type UserRecord } from "firebase-admin/auth"
 import { FieldValue, getFirestore, Timestamp, type Transaction } from "firebase-admin/firestore"
-import type { BeforeCreateResponse } from "firebase-functions/lib/common/providers/identity"
-import { type Change, type DocumentSnapshot, type FirestoreEvent } from "firebase-functions/v2/firestore"
-import { HttpsError, type AuthBlockingEvent } from "firebase-functions/v2/identity"
-import { promisify } from "util"
-import { CloudEvent } from "firebase-functions/v2"
-import { MessagePublishedData } from "firebase-functions/v2/pubsub"
 
 import { UserRole } from "apx/types"
 
-import { updateConfig, updatePayments, updateProducts } from "../tools/vtu/update"
-import { sendText } from "../tools/msn"
-import { OrderConv, StatConv, UserConv, WalletConv } from "../utils/vtu/convs"
-import { MERGE_DOC, reportError, shardDoc } from "../utils/vtu/utils"
-import type { EventProps } from "../types/vtu"
+import { MERGE_DOC, reportError, shardDoc } from "../../../utils/vtu"
+import { OrderConv, StatConv, UserConv, WalletConv } from "../../../utils/vtu/convs"
 
-const asyncExec = promisify(exec)
+const auth = createRouter()
 
-const userSignUp = async (event: AuthBlockingEvent): Promise<BeforeCreateResponse> => {
-	const user = event.data
+auth.post("sign-up", async (r, res): Promise<void> => {
+	const user: Record<string, string> = r.body
 	try {
 		// get the db references
 		const firestore = getFirestore()
@@ -44,7 +35,7 @@ const userSignUp = async (event: AuthBlockingEvent): Promise<BeforeCreateRespons
 				nam: user.displayName,
 				phn: user.phoneNumber,
 				rol: role,
-				dat: Timestamp.fromMillis(Math.floor(Date.parse(user.metadata.creationTime) / 1000)),
+				dat: Timestamp.fromMillis(Math.floor(Date.now() / 1000)),
 				typ: 'default',
 			}, MERGE_DOC)
 			return role
@@ -57,16 +48,25 @@ const userSignUp = async (event: AuthBlockingEvent): Promise<BeforeCreateRespons
 		// ping the support channel
 		await reportError(`*New User Sign Up*\n\n${user.displayName}\n${user.email}\n_provider: ${JSON.stringify(user.providerData)}_`)
 
-		return { customClaims: { role: role } }
+		const token = { customClaims: { role: role } }
+
+		res.json({
+			code: 201,
+			data: token,
+			text: "user signed up successfully"
+		})
 	} catch (error) {
 		// handle auth error
 		await getAuth().deleteUser(user.uid).catch(() => void 0)
-		await reportError(JSON.stringify(event.data))
-		throw new HttpsError("cancelled", "failed to sign up user")
+		await reportError(JSON.stringify(user))
+		res.json({
+			code: 403,
+			text: "failed to sign up user"
+		})
 	}
-}
+})
 
-const userDelete = async (user: UserRecord) => {
+auth.post("sign-down", async (user: UserRecord) => {
 	try {
 		const firestore = getFirestore()
 		const userRef = firestore.collection("users").doc(user.uid).withConverter(UserConv)
@@ -89,37 +89,26 @@ const userDelete = async (user: UserRecord) => {
 		// handle errors
 	}
 	return Promise.resolve()
-}
+})
 
 /**
  * Updates apps list cache file
  * @param {FirestoreEvent<Change<DocumentSnapshot> | undefined, EventProps>} event
  * @return {Promise<void>}
  */
-const metaUpdate = async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, EventProps>): Promise<void> => {
-	try {
-		if (event.params.api === "cfg")
-			await updateConfig(event)
-		else if (event.params.api === "product") {
-			await updateProducts(event)
-		} else if (event.params.api === "payment") {
-			await updatePayments(event)
-		}
-	} catch (error: Error | unknown) {
-		// console.error(error)
-	}
-	return Promise.resolve()
-}
+// const metaUpdate = async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, EventProps>): Promise<void> => {
+// 	try {
+// 		if (event.params.api === "cfg")
+// 			await updateConfig(event)
+// 		else if (event.params.api === "product") {
+// 			await updateProducts(event)
+// 		} else if (event.params.api === "payment") {
+// 			await updatePayments(event)
+// 		}
+// 	} catch (error: Error | unknown) {
+// 		// console.error(error)
+// 	}
+// 	return Promise.resolve()
+// }
 
-/**
- * Updates apps list cache file
- * @param {CloudEvent<MessagePublishedData>} event
- * @return {Promise<void>}
- */
-const ussdUpdate = async (event: CloudEvent<MessagePublishedData>): Promise<void> => {
-	// const service = `simsrv/ussd/cmds/{cid}`
-	const result = await asyncExec("termux-torch on").catch(() => 'failed sending command: ' + event.data.message.data.toString())
-	await sendText("v2", 2348020789906, result.toString())
-}
-
-export default { userSignUp, userDelete, ussdUpdate, metaUpdate }
+export default auth

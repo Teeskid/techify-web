@@ -8,12 +8,11 @@ const whatsapp = axios.create({
 		"Accept": "application/json",
 		"Content-Type": "application/json",
 		"Authorization": `Bearer: ${process.env.MSN_API_V1_TOKEN}`
-		//"Authorization": `Bearer: ${process.env.MSN_API_V1_TOKEN}`
 	}
 })
 
 export class WhatsApp implements Server {
-	async sendMessage(recipient: string, message: string) {
+	async sendTemplate(recipient: string, template: string) {
 		try {
 			const { data } = await whatsapp.post("/messages", {
 				"messaging_product": "whatsapp",
@@ -21,14 +20,30 @@ export class WhatsApp implements Server {
 				"to": recipient,
 				"type": "template",
 				"template": {
-					"name": "hello_world",
+					"name": template,
 					"language": {
 						"code": "en_GB"
 					}
 				}
 			})
 			console.log("WABA_MSN_SUCCESS", data)
-		} catch(error: Error | unknown) {
+		} catch (error: Error | unknown) {
+			if (axios.isAxiosError(error)) {
+				console.error("WABA_MSN_SUCCESS", error.response?.data)
+			}
+		}
+	}
+	async sendMessage(recipient: string, message: string) {
+		try {
+			const { data } = await whatsapp.post("/messages", {
+				"messaging_product": "whatsapp",
+				"recipient_type": "individual",
+				"to": recipient,
+				"type": "text",
+				"text": message
+			})
+			console.log("WABA_MSN_SUCCESS", data)
+		} catch (error: Error | unknown) {
 			if (axios.isAxiosError(error)) {
 				console.error("WABA_MSN_SUCCESS", error.response?.data)
 			}

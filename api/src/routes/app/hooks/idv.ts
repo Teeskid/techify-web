@@ -1,10 +1,10 @@
 import { Router as createRouter, type Request, type Response } from "express";
 
- const vrf = createRouter()
+ const idv = createRouter()
  
- vrf.get("/", (r: Request, res: Response) => {
+ idv.get("/", (r: Request, res: Response) => {
  	res.sendStatus(200)
  })
 
- export default vrf
+ export default idv
  

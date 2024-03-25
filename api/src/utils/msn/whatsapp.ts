@@ -1,13 +1,24 @@
 import axios, { type AxiosError } from "axios"
+import crypto from "crypto"
 
 import type { Server } from "../../types/msn"
 
+if (!process.env.MSN_API_V1_TOKEN || !process.env.MSN_API_V1_CRYPT)
+	throw new Error("missing required env variables")
+
+const proofMac = crypto.createHmac("sha256", process.env.MSN_API_V1_CRYPT)
+proofMac.update(process.env.MSN_API_V1_TOKEN)
+const proofSec = proofMac.digest("hex")
+
 const whatsapp = axios.create({
-	baseURL: `https://graph.facebook.com/v19.0/${process.env.MSN_API_V1_PH_ID}`,
+	baseURL: `https://graph.facebook.com/v19.0/${process.env.MSN_API_V1_PHONE}`,
 	headers: {
 		"Accept": "application/json",
 		"Content-Type": "application/json",
-		"Authorization": `Bearer: ${process.env.MSN_API_V1_TOKEN}`
+		"Authorization": `Bearer ${process.env.MSN_API_V1_TOKEN}`
+	},
+	params: {
+		"appsecret_proof": proofSec
 	}
 })
 

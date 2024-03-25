@@ -3,7 +3,7 @@
 import { Router as createRouter, type Request, type Response } from "express";
 import { getFirestore } from "firebase-admin/firestore";
 
-import { sendText } from "../../../tools/msn";
+import { replyText, sendText } from "../../../tools/msn";
 import { MessageLine } from "../../../types/msn";
 
 const msn = createRouter()
@@ -45,11 +45,14 @@ msn.route("/whatsapp").get(async (r: Request, res: Response) => {
 			batch.create(store.collection("waba").doc(), msg)
 		})
 		await batch.commit()
-		const message = items[0]
-		const display = `WhatsApp Message From ${message.contact.profile.name}\n: ${message.message.text.body}`
-		await sendText("telegram", "2348020789906", display)
+		await Promise.all(items.map(async (item) => {
+			const display = `WhatsApp Message From ${item.contact.profile.name}\n: ${item.message.text.body}`
+			await replyText("whatsapp", item.contact.wa_id, "Okay Tam Nagode", item.message.id)
+			await sendText("telegram", "2348020789906", display)
+		}))
 	} catch (error: Error | unknown) {
 		console.error(error)
+		console.log("PAYLOAD", JSON.stringify(entry))
 	}
 })
 

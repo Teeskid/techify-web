@@ -5,6 +5,10 @@ import { sendText } from "../../tools/msn"
 
 const msn = createRouter()
 
+msn.get("/", async (r, res) => {
+	res.sendStatus(200)
+})
+
 msn.get("/test", async (r, res) => {
 	res.sendStatus(200)
 	try {

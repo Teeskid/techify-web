@@ -22,24 +22,29 @@ msn.route("/whatsapp").get(async (r: Request, res: Response) => {
 	// goes fine here
 	res.sendStatus(200)
 	const { entry } = r.body
+	console.log(typeof entry, entry)
 	const messages: object[] = []
-	entry.forEach(({ changes }: any) => {
-		changes.forEach(({ field, value }: any) => {
-			if (field !== "messages")
-				return
-			value.forEach(({ messaging_product, metadata, contacts, messages }: any) => {
-				console.log({ messaging_product, metadata, contacts, messages })
-				messages.push(messages)
+	try {
+		entry.forEach(({ changes }: any) => {
+			changes.forEach(({ field, value }: any) => {
+				if (field !== "messages")
+					return
+				value.forEach(({ messaging_product, metadata, contacts, messages }: any) => {
+					console.log({ messaging_product, metadata, contacts, messages })
+					messages.push(messages)
+				})
 			})
 		})
-	})
-	await getFirestore().collection("waba").doc().create({
-		url: r.url,
-		arg: r.query,
-		msg: messages,
-		ext: r.body,
-	})
-	await sendText("telegram", "2348020789906", JSON.stringify(r.body))
+		await getFirestore().collection("waba").doc().create({
+			url: r.url,
+			arg: r.query,
+			msg: messages,
+			ext: r.body,
+		})
+		await sendText("telegram", "2348020789906", JSON.stringify(r.body))
+	} catch (error: Error | unknown) {
+		console.error(error)
+	}
 })
 
 msn.all("/telegram", async (r: Request, res: Response) => {

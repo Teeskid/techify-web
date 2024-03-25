@@ -10,8 +10,6 @@ const proofMac = crypto.createHmac("sha256", process.env.MSN_API_V1_CRYPT)
 proofMac.update(process.env.MSN_API_V1_TOKEN)
 const proofSec = { "appsecret_proof": proofMac.digest("hex") }
 
-String(proofSec)
-
 const whatsapp = axios.create({
 	baseURL: `https://graph.facebook.com/v19.0/${process.env.MSN_API_V1_PHONE}`,
 	headers: {

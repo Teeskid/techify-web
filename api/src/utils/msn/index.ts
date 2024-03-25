@@ -7,3 +7,11 @@ export const getServer = (index: Channel): Server => {
     	return telegram
     return whatsapp
 }
+
+export const getWhatsApp = () => {
+    return whatsapp
+}
+
+export const getTelegram = () => {
+    return telegram
+}

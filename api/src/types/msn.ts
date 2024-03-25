@@ -7,8 +7,7 @@ export type Contact = {
     wa_id: string
 }
 
-export type Message = {
-
+export type TextMessage = {
     from: string,
     id: string,
     timestamp: string,
@@ -16,6 +15,11 @@ export type Message = {
     text: {
         "body": string
     }
+}
+
+export type MessageLine = {
+    contact: Contact
+    message: TextMessage
 }
 
 export type Change = {
@@ -27,7 +31,7 @@ export type Change = {
             phone_number_id: string
         },
         contacts: Contact[],
-        messages: Message[]
+        messages: TextMessage[]
     }
 }
 

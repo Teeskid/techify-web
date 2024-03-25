@@ -4,6 +4,7 @@ import { Router as createRouter, type Request, type Response } from "express";
 import { getFirestore } from "firebase-admin/firestore";
 
 import { sendText } from "../../../tools/msn";
+import { MessageLine } from "../../../types/msn";
 
 const msn = createRouter()
 
@@ -22,8 +23,7 @@ msn.route("/whatsapp").get(async (r: Request, res: Response) => {
 	// goes fine here
 	res.sendStatus(200)
 	const { entry } = r.body
-	console.log(typeof entry, entry)
-	const messages: object[] = []
+	const items: MessageLine[] = []
 	try {
 		entry.forEach(({ changes }: any) => {
 			changes.forEach(({ field, value }: any) => {
@@ -34,18 +34,20 @@ msn.route("/whatsapp").get(async (r: Request, res: Response) => {
 					return
 				const contact = contacts[0]
 				const message = messages[0]
-				messages.push({ contact, message })
+				items.push({ contact, message })
 			})
 		})
+		if (items.length === 0)
+			return
 		const store = getFirestore()
 		const batch = store.batch()
-		messages.forEach((msg) => {
-			batch.create(store.collection("waba").doc(), {
-				...msg,
-			})
+		items.forEach((msg) => {
+			batch.create(store.collection("waba").doc(), msg)
 		})
 		await batch.commit()
-		await sendText("telegram", "2348020789906", JSON.stringify(r.body))
+		const message = items[0]
+		const display = `WhatsApp Message From ${message.contact.profile.name}\n: ${message.message.text.body}`
+		await sendText("telegram", "2348020789906", display)
 	} catch (error: Error | unknown) {
 		console.error(error)
 	}

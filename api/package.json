@@ -10,7 +10,8 @@
     "ignore": [
       "**/dist/**",
       "**/src/static/**",
-      "**/src/mocks/**"
+      "**/src/mocks/**",
+      "**/src/views/**"
     ]
   },
   "scripts": {

@@ -1,7 +1,7 @@
 /** @module routes/app/hooks/msn */
 
-import { Router as createRouter, type Request, type Response } from "express"
-import { getFirestore } from "firebase-admin/firestore"
+import { Router as createRouter, type Request, type Response } from "express";
+import { getFirestore } from "firebase-admin/firestore";
 
 import { sendText } from "../../../tools/msn";
 
@@ -14,19 +14,30 @@ msn.route("/whatsapp").get(async (r: Request, res: Response) => {
 	}
 	res.sendStatus(400)
 }).post(async (r: Request, res: Response) => {
-	if (typeof r.body !== 'object' || r.body.field !== 'messages') {
+	if (typeof r.body !== 'object' || r.body.object !== "whatsapp_business_account") {
 		res.sendStatus(400)
 		console.error("WABA_ERROR", JSON.stringify(r.body))
 		return
 	}
 	// goes fine here
 	res.sendStatus(200)
-	const { field } = r.body
+	const { entry } = r.body
+	const messages: object[] = []
+	entry.forEach(({ changes }: any) => {
+		changes.forEach(({ field, value }: any) => {
+			if (field !== "messages")
+				return
+			value.forEach(({ messaging_product, metadata, contacts, messages }: any) => {
+				console.log({ messaging_product, metadata, contacts, messages })
+				messages.push(messages)
+			})
+		})
+	})
 	await getFirestore().collection("waba").doc().create({
 		url: r.url,
-		msg: r.body,
 		arg: r.query,
-		fld: field
+		msg: messages,
+		ext: r.body,
 	})
 	await sendText("telegram", "2348020789906", JSON.stringify(r.body))
 })

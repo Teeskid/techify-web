@@ -1,4 +1,10 @@
 body {
     font-family: Inter;
     line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+#root {
+    margin: 0;
+    padding: 0;
 }

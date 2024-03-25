@@ -2,13 +2,23 @@ import { RouteObject, RouterProvider, createBrowserRouter } from 'react-router-d
 
 import './App.css'
 
-import Privacy from './routes/pages/privacy'
+import SignIn from './routes/auth/sign-in'
+import SignUp from './routes/auth/sign-up'
+import Privacy from './routes/misc/privacy'
 import Root from './routes/root'
 
 const routes: RouteObject[] = [
 	{
 		path: "/",
 		Component: Root
+	},
+	{
+		path: "/sign-in",
+		Component: SignIn
+	},
+	{
+		path: "/sign-up",
+		Component: SignUp
 	},
 	{
 		path: "privacy-policy",
@@ -18,11 +28,9 @@ const routes: RouteObject[] = [
 
 function App() {
 	return (
-		<div>
-			<h1>Techify Systems</h1>
+		<>
 			<RouterProvider router={createBrowserRouter(routes)} />
-			
-		</div>
+		</>
 	)
 }
 

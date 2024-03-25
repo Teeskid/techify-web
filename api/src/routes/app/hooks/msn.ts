@@ -26,22 +26,25 @@ msn.route("/whatsapp").get(async (r: Request, res: Response) => {
 	const messages: object[] = []
 	try {
 		entry.forEach(({ changes }: any) => {
-			changes.forEach(({ field, ...rest }: any) => {
-				if (field !== "messages")
+			changes.forEach(({ field, value }: any) => {
+				if (field !== "messages" || value.messaging_product !== "whatsapp")
 					return
-				console.log("REST", JSON.stringify(rest))
-				// value.forEach(({ messaging_product, metadata, contacts, messages }: any) => {
-				// 	console.log({ messaging_product, metadata, contacts, messages })
-				// 	messages.push(messages)
-				// })
+				const { metadata, contacts, messages } = Array.isArray(value) ? value[0] : value
+				if (metadata.phone_number_id !== process.env.MSN_API_V1_PHONE)
+					return
+				const contact = contacts[0]
+				const message = messages[0]
+				messages.push({ contact, message })
 			})
 		})
-		await getFirestore().collection("waba").doc().create({
-			url: r.url,
-			arg: r.query,
-			msg: messages,
-			ext: r.body,
+		const store = getFirestore()
+		const batch = store.batch()
+		messages.forEach((msg) => {
+			batch.create(store.collection("waba").doc(), {
+				...msg,
+			})
 		})
+		await batch.commit()
 		await sendText("telegram", "2348020789906", JSON.stringify(r.body))
 	} catch (error: Error | unknown) {
 		console.error(error)

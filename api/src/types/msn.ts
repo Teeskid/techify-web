@@ -7,19 +7,33 @@ export type Contact = {
     wa_id: string
 }
 
-export type TextMessage = {
+export type Message = {
     from: string,
     id: string,
     timestamp: string,
+    type: string
+}
+
+export type TextMessage = Message & {
     type: "text",
     text: {
         "body": string
     }
 }
 
+export type Document = Message & {
+    type: "document",
+    document: {
+        filename: string,
+        mime_type: string,
+        sha256: string,
+        id: string
+    }
+}
+
 export type MessageLine = {
     contact: Contact
-    message: TextMessage
+    message: TextMessage | Document
 }
 
 export type Change = {

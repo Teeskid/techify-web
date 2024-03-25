@@ -1,5 +1,6 @@
 import type { Channel } from "../../types/msn"
 import { getServer } from "../../utils/msn"
+import whatsapp from "../../utils/msn/whatsapp"
 
 export const sendText = async (index: Channel, recipient: string, message: string) => {
 	const server = getServer(index)
@@ -17,6 +18,11 @@ export const replyText = async (index: Channel, recipient: string, message: stri
 		status: true,
 		message: 'message sent successfully'
 	}
+}
+
+export const getWhatsAppMedia = async (mediaId: string) => {
+	const data = await whatsapp.getMediaFile(mediaId)
+	return data
 }
 
 export default {}

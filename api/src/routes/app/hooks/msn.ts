@@ -26,13 +26,14 @@ msn.route("/whatsapp").get(async (r: Request, res: Response) => {
 	const messages: object[] = []
 	try {
 		entry.forEach(({ changes }: any) => {
-			changes.forEach(({ field, value }: any) => {
+			changes.forEach(({ field, ...rest }: any) => {
 				if (field !== "messages")
 					return
-				value.forEach(({ messaging_product, metadata, contacts, messages }: any) => {
-					console.log({ messaging_product, metadata, contacts, messages })
-					messages.push(messages)
-				})
+				console.log("REST", JSON.stringify(rest))
+				// value.forEach(({ messaging_product, metadata, contacts, messages }: any) => {
+				// 	console.log({ messaging_product, metadata, contacts, messages })
+				// 	messages.push(messages)
+				// })
 			})
 		})
 		await getFirestore().collection("waba").doc().create({

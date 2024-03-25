@@ -14,6 +14,7 @@ jobs:
       - run: yarn --cwd app install && yarn --cwd app build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
+          node-version: 20.x
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TECHIFY_NG }}'
           channelId: live

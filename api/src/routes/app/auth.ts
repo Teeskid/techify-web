@@ -1,25 +1,46 @@
 import { Router as createRouter } from "express"
 import { getAuth, type UserRecord } from "firebase-admin/auth"
-import { FieldValue, getFirestore, Timestamp, type Transaction } from "firebase-admin/firestore"
+import { FieldValue, getFirestore, type Transaction } from "firebase-admin/firestore"
 
 import { UserRole } from "apx/types"
 
-import { MERGE_DOC, reportError, shardDoc } from "../../../utils/vtu"
-import { OrderConv, StatConv, UserConv, WalletConv } from "../../../utils/vtu/convs"
+import { verifyIdToken } from "../../utils/app/auth"
+import { MERGE_DOC, reportError, shardDoc } from "../../utils/vtu"
+import { OrderConv, StatConv, UserConv, WalletConv } from "../../utils/vtu/convs"
 
 const auth = createRouter()
 
-auth.post("sign-up", async (r, res): Promise<void> => {
-	const user: Record<string, string> = r.body
-	try {
-		// get the db references
-		const firestore = getFirestore()
-		const userRef = firestore.collection("users").doc(user.uid).withConverter(UserConv)
-		const statRef = firestore.doc("stats/luc").withConverter(StatConv)
+auth.all("/auth", async (r, res) => {
+	res.sendStatus(200)
+	const context = await verifyIdToken(r)
+	if (!context) {
+		return
+	}
+	const deviceId = r.body.deviceId
 
+	console.log("AUTH: ", { ...context, deviceId })
+	console.log("BODY: ", r.body)
+})
+
+auth.post("/sign-up", async (r, res): Promise<void> => {
+	const auth = getAuth()
+	const store = getFirestore()
+	let user: UserRecord | undefined
+	try {
+		const data: { email: string, name: string, phone: string, password: string } = r.body
+		// create an authentication user
+		user = await auth.createUser({
+			email: data.email,
+			displayName: data.name,
+			password: data.password
+		})
+
+		const userRef = store.collection("usrs").doc(user.uid).withConverter(UserConv)
+		const statRef = store.doc("stats/luc").withConverter(StatConv)
 		// create user details row
-		const role = await firestore.runTransaction<UserRole | null>(async (t: Transaction) => {
+		const role = await store.runTransaction<UserRole | null>(async (t: Transaction) => {
 			const __user = (await t.get(userRef)).data()
+
 			// if user already created
 			if (__user)
 				return null
@@ -29,44 +50,51 @@ auth.post("sign-up", async (r, res): Promise<void> => {
 			const role: UserRole = __stat ? UserRole.USER : UserRole.ADMIN
 
 			// if site has been installed
+			user = <UserRecord>user
 			t.set(statRef.collection('cnt').doc(shardDoc()), { val: FieldValue.increment(1) })
 			t.set(userRef, {
 				eml: user.email,
 				nam: user.displayName,
-				phn: user.phoneNumber,
+				phn: data.phone,
 				rol: role,
-				dat: Timestamp.fromMillis(Math.floor(Date.now() / 1000)),
+				dat: FieldValue.serverTimestamp(),
 				typ: 'default',
 			}, MERGE_DOC)
+
 			return role
 		})
 
-		// user already exists in db
+		// an error occured on the way
 		if (!role)
 			throw new Error()
 
-		// ping the support channel
-		await reportError(`*New User Sign Up*\n\n${user.displayName}\n${user.email}\n_provider: ${JSON.stringify(user.providerData)}_`)
+		// assign the admin role to user
+		await auth.setCustomUserClaims(user.uid, { role: role })
 
-		const token = { customClaims: { role: role } }
+		// ping the support channel
+		await reportError(`*New User Sign Up*\n\n${user.displayName}\n${data.email}\n_provider: ${JSON.stringify(user.providerData)}_`)
 
 		res.json({
-			code: 201,
-			data: token,
+			code: 200,
+			data: user,
 			text: "user signed up successfully"
 		})
-	} catch (error) {
-		// handle auth error
-		await getAuth().deleteUser(user.uid).catch(() => void 0)
+	} catch (error: Error | unknown) {
+		// handle authentication error
+		if (user) {
+			await getAuth().deleteUser(user.uid).catch(() => void 0)
+		}
+		console.error(error)
 		await reportError(JSON.stringify(user))
 		res.json({
-			code: 403,
-			text: "failed to sign up user"
+			code: 500,
+			text: "failed to sign up user",
+			real: (error as Error).message
 		})
 	}
 })
 
-auth.post("sign-down", async (user: UserRecord) => {
+auth.post("/sign-down", async (user: UserRecord) => {
 	try {
 		const firestore = getFirestore()
 		const userRef = firestore.collection("users").doc(user.uid).withConverter(UserConv)
@@ -89,6 +117,10 @@ auth.post("sign-down", async (user: UserRecord) => {
 		// handle errors
 	}
 	return Promise.resolve()
+})
+
+auth.post("/recover-account", async (r, res) => {
+	res.sendStatus(200)
 })
 
 /**

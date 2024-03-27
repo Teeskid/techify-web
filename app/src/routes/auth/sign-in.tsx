@@ -1,23 +1,22 @@
-import * as React from 'react';
-import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
-import GlobalStyles from '@mui/joy/GlobalStyles';
-import CssBaseline from '@mui/joy/CssBaseline';
+import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import { Typography } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Checkbox from '@mui/joy/Checkbox';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
+import GlobalStyles from '@mui/joy/GlobalStyles';
 import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
-import Link from '@mui/joy/Link';
 import Input from '@mui/joy/Input';
+import Link from '@mui/joy/Link';
 import Stack from '@mui/joy/Stack';
-import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+import { useColorScheme } from '@mui/joy/styles';
+import * as React from 'react';
 
 import GoogleIcon from '../../components/GoogleIcon';
-import { Typography } from '@mui/joy';
 
 interface FormElements extends HTMLFormControlsCollection {
 	email: HTMLInputElement;
@@ -54,8 +53,7 @@ function ColorSchemeToggle(props: IconButtonProps) {
 
 export default function SignIn(): React.ReactNode {
 	return (
-		<CssVarsProvider defaultMode="dark" disableTransitionOnChange>
-			<CssBaseline />
+		<>
 			<GlobalStyles
 				styles={{
 					':root': {
@@ -201,7 +199,7 @@ export default function SignIn(): React.ReactNode {
 					</Box>
 					<Box component="footer" sx={{ py: 3 }}>
 						<Typography level="body-xs" textAlign="center">
-							© Your company {new Date().getFullYear()}
+							© Techify NG {new Date().getFullYear()}
 						</Typography>
 					</Box>
 				</Box>
@@ -229,6 +227,6 @@ export default function SignIn(): React.ReactNode {
 					},
 				})}
 			/>
-		</CssVarsProvider>
+		</>
 	);
 }

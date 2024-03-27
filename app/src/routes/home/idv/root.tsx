@@ -1,4 +1,4 @@
-export default function MSNHomeRoot() {
+export default function IDVHomeRoot() {
     return (
         <>
         </>

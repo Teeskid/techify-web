@@ -4,7 +4,7 @@ import { Router as createRouter, type Request, type Response } from "express";
 import * as crypto from "crypto";
 import { getAuth, type UserRecord } from "firebase-admin/auth";
 
-import { chargeVirtual } from "../../../tools/pay/virtuals";
+import { chargeVirtual } from "../../../tools/pay/nuban";
 import { chargeWallet } from "../../../tools/vtu/users";
 import { sendText } from "../../../tools/msn";
 import { DEBUG_MODE } from "../../../utils/vtu/const";

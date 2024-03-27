@@ -5,6 +5,7 @@ import express, { type Request } from "express";
 import { applicationDefault, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import path from "path";
+import cors from "cors"
 
 import routes from "./routes";
 
@@ -23,6 +24,7 @@ const app = express();
 app.set("view engine", "ejs")
 app.use(parser.json())
 app.use(parser.urlencoded({ extended: false }))
+app.use(cors({ origin: ["http://localhost:5000"] }))
 
 const doOnce = async (r: Request) => {
 	// gather required data

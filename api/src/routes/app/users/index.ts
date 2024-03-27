@@ -1,12 +1,12 @@
 import { Router as createRouter } from "express"
 
-import auth from "./auth"
+import vtu from "./vtu"
 
 const users = createRouter();
 
 users.get("/", (r, res) => {
 	res.sendStatus(200)
 })
-users.use("/auth", auth)
+users.use("/vtu", vtu)
 
 export default users

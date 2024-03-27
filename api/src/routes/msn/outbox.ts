@@ -10,8 +10,10 @@ outbox.get("/", async (r, res) => {
 
 outbox.get("/send", async (r, res) => {
 	res.sendStatus(200)
+	const client = String(r.query.client).trim()
 	try {
-		await sendText("whatsapp", "2349091287856", "Sani kana ina ne?")
+		// 2349091287856
+		await sendText("whatsapp", client, "Malam Abdul Ya Kake?")
 	} catch (error: Error | unknown) {
 		console.error(error)
 	}

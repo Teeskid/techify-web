@@ -1,4 +1,4 @@
-export { default as Meta } from "./meta"
-export { default as Virtual } from "./virtuals"
+export { default as meta } from "./meta"
+export { default as virtuals } from "./nuban"
 
 export default {}

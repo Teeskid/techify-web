@@ -34,6 +34,7 @@ import * as React from 'react';
 import { getAuth, signOut } from 'firebase/auth';
 import { closeSidebar } from '../utils/drawer';
 import ColorSchemeToggle from './ColorSchemeToggle';
+import { useAuth } from '../contexts';
 
 function Toggler({
 	defaultExpanded = false,
@@ -68,6 +69,7 @@ function Toggler({
 }
 
 export default function Sidebar() {
+	const { user } = useAuth()
 	return (
 		<Sheet
 			className="Sidebar"
@@ -145,7 +147,7 @@ export default function Sidebar() {
 					sx={{
 						gap: 1,
 						'--List-nestedInsetStart': '30px',
-						'--ListItem-radius': (theme) => theme.vars.radius.sm,
+						'--ListItem-radius': (theme: any) => theme.vars.radius.sm,
 					}}
 				>
 					<ListItem>
@@ -215,6 +217,7 @@ export default function Sidebar() {
 
 					<ListItem nested>
 						<Toggler
+							defaultExpanded
 							renderToggle={({ open, setOpen }) => (
 								<ListItemButton onClick={() => setOpen(!open)}>
 									<RememberMeOutlinedIcon />
@@ -229,13 +232,13 @@ export default function Sidebar() {
 						>
 							<List sx={{ gap: 0.5 }}>
 								<ListItem sx={{ mt: 0.5 }}>
-									<ListItemButton component="a" href="/home/sim-service">Logs</ListItemButton>
+									<ListItemButton component="a" href="/home/id-verification">Try It</ListItemButton>
 								</ListItem>
 								<ListItem sx={{ mt: 0.5 }}>
-									<ListItemButton component="a" href="/home/sim-service/servers">Servers</ListItemButton>
+									<ListItemButton component="a" href="/home/id-verification">Servers</ListItemButton>
 								</ListItem>
 								<ListItem>
-									<ListItemButton component="a" href="/home/sim-service/connections">Connections</ListItemButton>
+									<ListItemButton component="a" href="/home/id-verification">Connections</ListItemButton>
 								</ListItem>
 							</List>
 						</Toggler>
@@ -310,42 +313,13 @@ export default function Sidebar() {
 						</ListItemButton>
 					</ListItem>
 
-					<ListItem nested>
-						<Toggler
-							defaultExpanded
-							renderToggle={({ open, setOpen }) => (
-								<ListItemButton onClick={() => setOpen(!open)}>
-									<SettingsRoundedIcon />
-									<ListItemContent>
-										<Typography level="title-sm">Settings</Typography>
-									</ListItemContent>
-									<KeyboardArrowDownIcon
-										sx={{ transform: open ? 'rotate(180deg)' : 'none' }}
-									/>
-								</ListItemButton>
-							)}
-						>
-							<List sx={{ gap: 0.5 }}>
-								<ListItem sx={{ mt: 0.5 }}>
-									<ListItemButton selected>My profile</ListItemButton>
-								</ListItem>
-								<ListItem>
-									<ListItemButton>Create a new user</ListItemButton>
-								</ListItem>
-								<ListItem>
-									<ListItemButton>Roles & permission</ListItemButton>
-								</ListItem>
-							</List>
-						</Toggler>
-					</ListItem>
-
 				</List>
 				<List
 					size="sm"
 					sx={{
 						mt: 'auto',
 						flexGrow: 0,
-						'--ListItem-radius': (theme) => theme.vars.radius.sm,
+						'--ListItem-radius': (theme: any) => theme.vars.radius.sm,
 						'--List-gap': '8px',
 						mb: 2,
 					}}>
@@ -364,6 +338,20 @@ export default function Sidebar() {
 							</Chip>
 						</ListItemButton>
 					</ListItem>
+
+					<ListItem>
+						<ListItemButton
+							role="menuitem"
+							component="a"
+							href="/home/settings"
+						>
+							<SettingsRoundedIcon />
+							<ListItemContent>
+								<Typography level="title-sm">Settings</Typography>
+							</ListItemContent>
+						</ListItemButton>
+					</ListItem>
+
 					<ListItem>
 						<ListItemButton>
 							<SupportRoundedIcon />
@@ -401,8 +389,8 @@ export default function Sidebar() {
 					src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
 				/>
 				<Box sx={{ minWidth: 0, flex: 1 }}>
-					<Typography level="title-sm">Siriwat K.</Typography>
-					<Typography level="body-xs">siriwatk@test.com</Typography>
+					<Typography level="title-sm">{user?.displayName}.</Typography>
+					<Typography level="body-xs">{user?.email}</Typography>
 				</Box>
 				<IconButton onClick={() => signOut(getAuth())} size="sm" variant="plain" color="neutral">
 					<LogoutRoundedIcon />

@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance } from "axios"
 
-import { APP_BASE_URL } from "../constants/server"
+import { APP_BASE_URL } from "../utils/contants"
 import { errorHandle } from "../utils/api"
 
 export default class APPApi {

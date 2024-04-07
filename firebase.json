@@ -21,7 +21,7 @@
 	"hosting": [
 		{
 			"site": "techify-ng",
-			"public": "app/dist",
+			"public": "app/build",
 			"predeploy": "yarn --cwd app build",
 			"ignore": [
 				"api/**",
@@ -39,7 +39,7 @@
 		}
 	],
 	"storage": {
-		"rules": "storage.json"
+		"rules": "storage.rules"
 	},
 	"emulators": {
 		"auth": {
@@ -69,7 +69,7 @@
 		"singleProjectMode": true
 	},
 	"remoteconfig": {
-		"template": "config.json"
+		"template": "remoteconfig.json"
 	},
 	"extensions": {}
 }

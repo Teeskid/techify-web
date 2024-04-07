@@ -26,25 +26,4 @@ export const saveStatic = (data: BVNDetails): BVNDetails => {
 	}
 }
 
-export const readBVNMock = (bvnNumber: string): BVNDetails => {
-	const data = JSON.parse(fs.readFileSync(path.resolve("mocks/bvn-full-details.json")).toString("utf-8")).response as BVNDetails
-	return {
-		firstName: data.firstName,
-		middleName: data.middleName,
-		lastName: data.lastName,
-		dateOfBirth: data.dob,
-		dateOfReg: data.registrationDate,
-		email: data.email,
-		gender: data.gender,
-		phone: data.phone,
-		alternatePhone: data.alternatePhone,
-		country: data.country,
-		stateOfOrigin: data.stateOfOrigin,
-		addressLine3: data.addressLine3,
-		maritalStatus: data.maritalStatus,
-		photoData: data.avatar,
-		bvnNumber,
-	}
-}
-
 export default {}

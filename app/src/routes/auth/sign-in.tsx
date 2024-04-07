@@ -14,9 +14,12 @@ import Input from '@mui/joy/Input';
 import Link from '@mui/joy/Link';
 import Stack from '@mui/joy/Stack';
 import { useColorScheme } from '@mui/joy/styles';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import * as React from 'react';
 
 import GoogleIcon from '../../components/GoogleIcon';
+import { useAuth } from '../../contexts';
+import { Navigate } from 'react-router-dom';
 
 interface FormElements extends HTMLFormControlsCollection {
 	email: HTMLInputElement;
@@ -52,6 +55,30 @@ function ColorSchemeToggle(props: IconButtonProps) {
 }
 
 export default function SignIn(): React.ReactNode {
+
+	const { initialized, logged } = useAuth()
+
+	const onSubmit = React.useCallback((event: React.FormEvent<SignInFormElement>) => {
+		event.preventDefault();
+		const formElements = event.currentTarget.elements;
+		const data = {
+			email: formElements.email.value,
+			password: formElements.password.value,
+			persistent: formElements.persistent.value,
+		};
+		signInWithEmailAndPassword(getAuth(), data.email, data.password).then((result) => {
+			alert(JSON.stringify(result, null, 2))
+		}).catch((error) => {
+			alert(error.message)
+		})
+	}, [])
+
+	if (initialized && logged) {
+		return (
+			<Navigate to="/home" />
+		)
+	}
+
 	return (
 		<>
 			<GlobalStyles
@@ -99,7 +126,7 @@ export default function SignIn(): React.ReactNode {
 							<IconButton variant="soft" color="primary" size="sm">
 								<BadgeRoundedIcon />
 							</IconButton>
-							<Typography level="title-lg">Company logo</Typography>
+							<Typography level="title-lg">Techify NG</Typography>
 						</Box>
 						<ColorSchemeToggle />
 					</Box>
@@ -133,7 +160,7 @@ export default function SignIn(): React.ReactNode {
 								</Typography>
 								<Typography level="body-sm">
 									New to company?{' '}
-									<Link href="#replace-with-a-link" level="title-sm">
+									<Link href="/sign-up" level="title-sm">
 										Sign up!
 									</Link>
 								</Typography>
@@ -157,18 +184,7 @@ export default function SignIn(): React.ReactNode {
 							or
 						</Divider>
 						<Stack gap={4} sx={{ mt: 2 }}>
-							<form
-								onSubmit={(event: React.FormEvent<SignInFormElement>) => {
-									event.preventDefault();
-									const formElements = event.currentTarget.elements;
-									const data = {
-										email: formElements.email.value,
-										password: formElements.password.value,
-										persistent: formElements.persistent.checked,
-									};
-									alert(JSON.stringify(data, null, 2));
-								}}
-							>
+							<form onSubmit={onSubmit}>
 								<FormControl required>
 									<FormLabel>Email</FormLabel>
 									<Input type="email" name="email" />

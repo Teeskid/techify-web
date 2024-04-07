@@ -1,6 +1,6 @@
-dist
-/dist
+build
+/build
 node_modules
-**/dist/**
+**/build/**
 yarn.lock
 yarn.*.lock

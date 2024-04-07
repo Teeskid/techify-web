@@ -2,8 +2,8 @@
 
 import axios, { type AxiosError } from "axios"
 
-import { BVNDetails, NINDetails } from "../../types/idv"
-import { cacheRequest, requestRef } from ".."
+import { cacheRequest, requestCache, requestRef } from ".."
+import type { BVNDetails, NINDetails } from "../../types/idv"
 
 if (!process.env.VRF_API_V1_XUSER || !process.env.VRF_API_V1_TOKEN)
 	throw new Error("missing env variables")
@@ -22,7 +22,7 @@ const seamFix = axios.create({
 	timeout: 60000
 })
 
-const createNINDetails = (ninNumber: string, raw: NINDetails): NINDetails => {
+const createNINDetails = (ninNumber: string, raw: any): NINDetails => {
 	/**
 	 * "firstName": "PROUD",
 		"surname": "CITIZEN",
@@ -38,22 +38,29 @@ const createNINDetails = (ninNumber: string, raw: NINDetails): NINDetails => {
 		"vnin": "SF895332826955L0",
 		"vNIN": "SF895332826955L0"
 	 */
+	console.log(Object.keys(raw))
 	return {
 		firstName: raw.firstName,
 		lastName: raw.surname,
 		middleName: raw.middleName,
-		dateOfBirth: raw.dateOfBirth,
+		dateOfBirth: new Date(raw.dateOfBirth),
+		address: {
+			stateName: "",
+			localGovt: "",
+			lineTwo: ""
+		},
+		trackingId: "",
 		phoneNumber: raw.trustedNumber,
 		gender: raw.gender,
 		userId: raw.userid,
 		photoData: raw.photo,
-		issueDate: raw.ts,
+		issueDate: new Date(raw.ts),
 		vNinNumber: raw.vNIN,
 		ninNumber
 	}
 }
 
-const createBVNDetails = (bvnNumber: string, raw: BVNDetails): BVNDetails => {
+const createBVNDetails = (bvnNumber: string, raw: any): BVNDetails => {
 	/**
 	 * "email": "",
 		"gender": "male",
@@ -102,29 +109,36 @@ const createBVNDetails = (bvnNumber: string, raw: BVNDetails): BVNDetails => {
 	}
 }
 
-const verifyNIN = async (ninNumber: string) => {
-	const { data } = await seamFix.post("/", {
-		"verificationType": "NIN-VERIFY",
-		"searchParameter": ninNumber,
-		"countryCode": "NG",
-		"transactionReference": requestRef()
-	}, {
-		headers: {
-			"apiKey": ninKey2,
-		}
-	}).catch((error: AxiosError) => ({
-		data: {
-			error: error.message,
-			data: error.response?.data
-		}
-	}))
-	await cacheRequest(ninNumber, data)
-	if (data.error !== undefined)
-		return data
+const verifyNIN = async (ninNumber: string): Promise<NINDetails> => {
+	let data: Record<string, any> | null = await requestCache(ninNumber)
+	if (data === null) {
+		data = (
+			await seamFix.post("/", {
+				"verificationType": "NIN-VERIFY",
+				"searchParameter": ninNumber,
+				"countryCode": "NG",
+				"transactionReference": requestRef()
+			}, {
+				headers: {
+					"apiKey": ninKey2,
+				}
+			}).catch((error: AxiosError) => ({
+				data: {
+					error: error.message,
+					data: error.response?.data
+				}
+			}))
+		).data
+		await cacheRequest(ninNumber, data as object)
+	} else {
+		data = data.data
+		console.log(`Cache Found: `, ninNumber)
+	}
+	data = data as Record<string, any>
+	if (Object.keys(data).includes("error"))
+		throw new Error(data.error)
 	if (data.responseCode !== "00" || data.verificationStatus !== "VERIFIED")
-		return {
-			error: data.description, data
-		}
+		throw new Error(data.description)
 	return createNINDetails(ninNumber, data.response)
 }
 

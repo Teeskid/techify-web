@@ -119,7 +119,7 @@ auth.post("/sign-down", async (user: UserRecord) => {
 	return Promise.resolve()
 })
 
-auth.post("/recover-account", async (r, res) => {
+auth.post("/recover", async (r, res) => {
 	res.sendStatus(200)
 })
 

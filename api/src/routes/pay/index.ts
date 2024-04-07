@@ -1,5 +1,9 @@
-import { Router as createRouter } from "express";
+import { Router as createRouter } from "express"
 
-export default createRouter().all('/', (r, res) => {
-    res.sendStatus(200)
-})
+import hooks from "./hooks"
+
+const pay = createRouter()
+
+pay.use("/hooks", hooks)
+
+export default pay

@@ -10,7 +10,7 @@ export const errorHandle = (error: AxiosError | unknown) => {
         data: {
             code: 400,
             data: error.response?.data,
-            text: "failed to make server request"
+            text: error.message
         }
     }
 }

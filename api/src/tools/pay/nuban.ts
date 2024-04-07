@@ -1,60 +1,59 @@
-import type { PaymentChannelKey, User, Virtual } from "apx/types"
+import { getFirestore } from "firebase-admin/firestore"
 
-import { isValidEmail, isValidName, isValidPhone } from "../../utils/vtu"
-import type { Server } from "./types"
-import { getServer } from "./utils"
+import { AuthData } from "../../types/app"
+import { createVirtual as _updateVirtual } from "../../utils/pay/nuban"
+import { MERGE_DOC, isValidEmail, isValidName, isValidPhone } from "../../utils/vtu"
+import { UserConv } from "../../utils/vtu/convs"
 
-export const createVirtual = async (user: User, index: PaymentChannelKey): Promise<Virtual> => {
-    // validate input data
-    const errors: Array<string> = []
-    if (!isValidEmail(user.eml))
-        errors.push('invalid email')
-    if (!isValidPhone(user.phn))
-        errors.push('invalid phone number')
-    if (!isValidName(user.nam))
-        errors.push('invalid display name')
-    if (errors.length !== 0) {
-        throw new Error(errors.join(', '))
+export const updateNuban = async (auth: AuthData, data: object): Promise<object> => {
+    if (!data) {
+        return {
+            code: 403,
+            text: 'an error occured'
+        }
     }
-    // get cached server module
-    const server: Server = await getServer(index)
-    // update a virtual account
-    return await server.createVirtual(user.doc, { email: user.eml, phoneNumber: user.phn, displayName: user.nam })
+    try {
+        // validate user data
+        const firestore = getFirestore()
+        const userRef = firestore.collection("users").doc(auth.uid).withConverter(UserConv)
+        const user = (await userRef.get()).data()
+
+        if (!user || user.typ !== 'wallet')
+            throw new Error('you have not updated your profile yet')
+
+        const errors = []
+        if (!isValidEmail(user.eml))
+            errors.push('invalid email')
+        if (!isValidPhone(user.phn))
+            errors.push('invalid phone number')
+        if (!isValidName(user.nam))
+            errors.push('invalid name')
+        if (errors.length !== 0) {
+            errors.push('please update your profile')
+            throw new Error(errors.join(', '))
+        }
+
+        const walletRef = firestore.collection("uwlts").doc(userRef.id)
+        const wallet = (await walletRef.get()).data()
+        if (!wallet)
+            throw new Error('you have not created a wallet yet')
+
+        const virtual = await _updateVirtual(user, 'v2')
+        if (!virtual)
+            throw new Error('An error occured while generating your account number')
+
+        // update user wallet
+        await walletRef.set({
+            kda: {
+                nam: virtual.name,
+                nbn: virtual.nuban
+            }
+        }, MERGE_DOC)
+
+        return { status: true, message: 'profile updated successfully', data }
+    } catch (error: Error | unknown) {
+        return { status: false, message: (<Error>error).message }
+    }
 }
 
-export const chargeVirtual = async (index: PaymentChannelKey, userId: string, amount: number): Promise<void> => {
-    // get cached server module
-    const server: Server = await getServer(index)
-    // fetch virtual accounts
-    await server.chargeVirtual(userId, amount)
-}
-
-export const getVirtual = async (index: PaymentChannelKey, userId: string): Promise<Virtual | null> => {
-    // get cached server module
-    const server: Server = await getServer(index)
-    // fetch virtual accounts
-    return await server.getVirtual(userId)
-}
-
-export const getVirtuals = async (index: PaymentChannelKey, page: number) => {
-    // get cached server module
-    const server: Server = await getServer(index)
-    // fetch virtual accounts
-    return await server.getVirtuals(page)
-}
-
-export const getBalance = async (index: PaymentChannelKey, userId: string) => {
-    // get cached server module
-    const server: Server = await getServer(index)
-    // fetch virtual accounts
-    return await server.getBalance(userId)
-}
-
-export const disableVirtual = async (index: PaymentChannelKey, userId: string, enable: boolean): Promise<void> => {
-    // get cached server module
-    const server: Server = await getServer(index)
-    // fetch virtual accounts
-    await server.disableVirtual(userId, enable)
-}
-
-export default { getVirtual, getAccounts: getVirtuals, getBalance, createVirtual, chargeVirtual, disableVirtual }
+export default {}

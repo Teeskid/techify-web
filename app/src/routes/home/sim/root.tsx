@@ -10,6 +10,7 @@ type Message = {
 }
 
 export default function SIMHomeRoot() {
+    
     const [state, setState] = useState<Message>()
     useEffect(() => {
         const messaging = getMessaging()
@@ -35,8 +36,9 @@ export default function SIMHomeRoot() {
         })
         return unSubscribe
     }, [])
+
     return (
-        <Box alignContent={"flex-start"} sx={{ textAlign: "left", marginX: "10px" }}>
+        <Box alignContent="flex-start" sx={{ textAlign: "left", marginX: "10px" }}>
             <Typography variant="solid">SIM Server Management</Typography>
             <Typography variant="plain">{state?.message}</Typography>
             <p>

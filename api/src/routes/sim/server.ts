@@ -22,6 +22,7 @@ server.post("/auth", async (r, res) => {
 	if (!context) {
 		return
 	}
+	console.log(context)
 
 	const token = String(r.body.token).trim()
 	const title = String(r.body.title).trim()

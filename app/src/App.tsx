@@ -9,10 +9,16 @@ import { RouteObject, RouterProvider, createBrowserRouter } from 'react-router-d
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getAnalytics, getGoogleAnalyticsClientId } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
+import { isSupported } from "firebase/messaging";
 
+import { AuthProvider } from './contexts';
 import SignIn from './routes/auth/sign-in';
 import SignUp from './routes/auth/sign-up';
-import AppHomeRoot from './routes/home/app/root';
+import Home from './routes/home';
+import AppDashboard from './routes/home/app/dashboard';
+import AppSettings from './routes/home/app/settings';
+import IDVHome from './routes/home/idv/home';
+import IDVHomeRoot from './routes/home/idv/root';
 import HomeRoot from './routes/home/root';
 import SIMHomeRoot from './routes/home/sim/root';
 import Privacy from './routes/misc/privacy';
@@ -38,59 +44,88 @@ const analytics = getAnalytics(app);
 const routes: RouteObject[] = [
 	{
 		path: "/",
-		Component: Root
-	},
-	{
-		path: "/home",
-		Component: HomeRoot,
+		Component: Root,
+		errorElement: <div>Error Occured</div>,
 		children: [
 			{
 				index: true,
-				Component: AppHomeRoot
+				Component: Home
 			},
 			{
-				path: "messanger",
-				element: <hr />
+				path: "home",
+				Component: HomeRoot,
+				children: [
+					{
+						index: true,
+						Component: AppDashboard
+					},
+					{
+						path: "messanger",
+						element: <hr />
+					},
+					{
+						path: "sim-service",
+						Component: SIMHomeRoot
+					},
+					{
+						path: "id-verification",
+						Component: IDVHomeRoot,
+						children: [
+							{
+								index: true,
+								Component: IDVHome
+							}
+						]
+					},
+					{
+						path: "virtual-topup",
+						element: <hr />
+					},
+					{
+						path: "payment-gateway",
+						element: <hr />
+					},
+					{
+						path: "settings",
+						Component: AppSettings
+					}
+				]
 			},
 			{
-				path: "sim-service",
-				Component: SIMHomeRoot
+				path: "/sign-in",
+				Component: SignIn
 			},
 			{
-				path: "messanger",
-				element: <hr />
+				path: "/sign-up",
+				Component: SignUp
 			},
 			{
-				path: "virtual-topup",
-				element: <hr />
+				path: "/privacy-policy",
+				Component: Privacy
 			},
 		]
-	},
-	{
-		path: "/sign-in",
-		Component: SignIn
-	},
-	{
-		path: "/sign-up",
-		Component: SignUp
-	},
-	{
-		path: "/privacy-policy",
-		Component: Privacy
-	},
+	}
 ]
 
 function App() {
+
 	useEffect(() => {
+		isSupported().then((isSupported) => {
+			if (!isSupported)
+				console.error("notification is not supported")
+		})
 		getGoogleAnalyticsClientId(analytics).catch((error) => {
 			throw error
 		})
 	}, [])
+
 	return (
-		<CssVarsProvider defaultMode="dark" disableTransitionOnChange>
-			<CssBaseline />
-			<RouterProvider router={createBrowserRouter(routes)} />
-		</CssVarsProvider>
+		<AuthProvider>
+			<CssVarsProvider defaultMode="dark" disableTransitionOnChange>
+				<CssBaseline />
+				<RouterProvider router={createBrowserRouter(routes)} />
+			</CssVarsProvider>
+		</AuthProvider>
 	)
 }
 

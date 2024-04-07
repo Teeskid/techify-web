@@ -6,6 +6,7 @@ import { Router as createRouter } from "express"
 import admin from "./admin"
 import airtime from "./airtime"
 import bundle from "./bundle"
+import hook from "./hook"
 import user from "./user"
 
 const vtu = createRouter()
@@ -13,14 +14,7 @@ const vtu = createRouter()
 vtu.get("/", (r, res) => {
     res.sendStatus(200)
 })
-vtu.get("/networks", (r, res) => {
-    res.json({
-        status: true,
-        data: [
-
-        ]
-    })
-})
+vtu.use("/hook", hook)
 vtu.use("/admin", admin)
 vtu.use("/user", user)
 vtu.use("/bundle", bundle)

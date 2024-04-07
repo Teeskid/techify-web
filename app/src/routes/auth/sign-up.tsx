@@ -1,7 +1,7 @@
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import { Typography } from '@mui/joy';
+import { Link, Typography } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import FormControl from '@mui/joy/FormControl';
@@ -49,7 +49,7 @@ function ColorSchemeToggle(props: IconButtonProps) {
 }
 
 export default function SignUp(): React.ReactNode {
-    
+
     const onSubmit = React.useCallback((event: React.FormEvent<SignInFormElement>) => {
         event.preventDefault();
         const formElements = event.currentTarget.elements;
@@ -145,6 +145,12 @@ export default function SignUp(): React.ReactNode {
                                 <Typography component="h1" level="h3">
                                     Sign Up
                                 </Typography>
+                                <Typography level="body-sm">
+									Already a member?{' '}
+									<Link href="/sign-in" level="title-sm">
+										Sign in!
+									</Link>
+								</Typography>
                             </Stack>
                         </Stack>
                         <Stack gap={4} sx={{ mt: 2 }}>

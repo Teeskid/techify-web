@@ -1,1 +1,3 @@
-console.log("HI")
+function onMessage() {
+    console.log("HI")
+}

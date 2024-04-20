@@ -4,6 +4,7 @@ import IconButton from '@mui/joy/IconButton';
 import Sheet from '@mui/joy/Sheet';
 
 import { toggleSidebar } from '../utils/drawer';
+import { Link } from '@mui/joy';
 
 export default function Header() {
 	return (
@@ -42,6 +43,9 @@ export default function Header() {
 			>
 				<MenuRoundedIcon />
 			</IconButton>
+
+			<Link>Sign Out</Link>
+
 		</Sheet>
 	);
 }

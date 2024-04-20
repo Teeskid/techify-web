@@ -21,6 +21,7 @@ import IDVHome from './routes/home/idv/home';
 import IDVHomeRoot from './routes/home/idv/root';
 import HomeRoot from './routes/home/root';
 import SIMHomeRoot from './routes/home/sim/root';
+import VTUHomeRoot from './routes/home/vtu/root';
 import Privacy from './routes/misc/privacy';
 import Root from './routes/root';
 
@@ -79,7 +80,7 @@ const routes: RouteObject[] = [
 					},
 					{
 						path: "virtual-topup",
-						element: <hr />
+						Component: VTUHomeRoot
 					},
 					{
 						path: "payment-gateway",

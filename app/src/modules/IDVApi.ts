@@ -13,16 +13,18 @@ export default class IDVApi extends BaseApi {
         }
         return this.INSTANCE
     }
-    async verify(verPath: string, paramType: string, viewFormat: string, paramValue: string) {
+    async verify(verPath: string, paramType: string, paramValue: string) {
         const { data } = await this.client.post(`/verify/${verPath}`, {
             paramType,
             paramValue,
-            viewFormat
         }, {
             headers: {
                 "Authorization": `Bearer ${await this.__()}`
             }
         }).catch(errorHandle)
         return data
+    }
+    static buildViewLink(id: string, view: string) {
+        return `${IDV_BASE_URL}/verify/result?transactionId=${id}&viewFormat=${view}`
     }
 }

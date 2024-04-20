@@ -20,4 +20,11 @@ export default class APPApi {
         const { data: result } = await this.client.post("/auth/sign-up", data).catch(errorHandle)
         return result
     }
+    async genKey(type: string) {
+        const { data: result } = await this.client.post("/user/keys", {
+            type: type,
+            expiry: "never"
+        }).catch(errorHandle)
+        return result
+    }
 }

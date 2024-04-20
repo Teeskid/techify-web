@@ -1,8 +1,8 @@
 import { type Request, type Response } from "express";
-import { VerifyAppCheckTokenResponse, getAppCheck } from "firebase-admin/app-check";
+import { getAppCheck } from "firebase-admin/app-check";
 import { getAuth } from "firebase-admin/auth";
 
-import type { AuthData } from "../../types/app";
+import type { AppToken, AuthData, Context } from "../../types/app";
 
 /**
  * verifies identity token with optional response object
@@ -37,7 +37,7 @@ export const verifyIdToken = async (r: Request, res?: Response): Promise<AuthDat
     }
 }
 
-export const verifyAppCheck = async (r: Request, res?: Response): Promise<VerifyAppCheckTokenResponse | null> => {
+export const verifyAppCheck = async (r: Request, res?: Response): Promise<AppToken | null> => {
     // get the app check token
     const rawToken = String(r.header("X-Firebase-AppCheck")).trim()
     try {
@@ -63,6 +63,14 @@ export const verifyAppCheck = async (r: Request, res?: Response): Promise<Verify
         }
         throw error
     }
+}
+
+export const getContext = (r: Request) => {
+    return (r as any).context as Context
+}
+
+export const setContext = (r: Request, appToken: AppToken | null, authToken: AuthData | null) => {
+    (r as any).context = { app: appToken, auth: authToken }
 }
 
 export default {}

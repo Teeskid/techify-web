@@ -4,11 +4,12 @@ import axios, { type AxiosError } from "axios"
 
 import { cacheRequest, requestCache, requestRef } from ".."
 import type { BVNDetails, NINDetails } from "../../types/idv"
+import { formatDate } from "./verify"
 
-if (!process.env.VRF_API_V1_XUSER || !process.env.VRF_API_V1_TOKEN)
+if (!process.env.IDV_API_V1_XUSER || !process.env.IDV_API_V1_TOKEN)
 	throw new Error("missing env variables")
 
-const [ninKeys, bvnKeys] = process.env.VRF_API_V1_TOKEN.split(":", 2)
+const [ninKeys, bvnKeys] = process.env.IDV_API_V1_TOKEN.split(":", 2)
 const [ninKey1, ninKey2] = ninKeys.split("/", 2)
 const [, bvnKey2] = bvnKeys.split("/", 2)
 
@@ -17,9 +18,9 @@ const seamFix = axios.create({
 	headers: {
 		"Accept": "application/json",
 		"Content-Type": "application/json",
-		"userid": process.env.VRF_API_V1_XUSER
+		"userid": process.env.IDV_API_V1_XUSER
 	},
-	timeout: 60000
+	timeout: 30000
 })
 
 const createNINDetails = (ninNumber: string, raw: any): NINDetails => {
@@ -38,12 +39,11 @@ const createNINDetails = (ninNumber: string, raw: any): NINDetails => {
 		"vnin": "SF895332826955L0",
 		"vNIN": "SF895332826955L0"
 	 */
-	console.log(Object.keys(raw))
 	return {
 		firstName: raw.firstName,
 		lastName: raw.surname,
 		middleName: raw.middleName,
-		dateOfBirth: new Date(raw.dateOfBirth),
+		dateOfBirth: formatDate(raw.dateOfBirth),
 		address: {
 			stateName: "",
 			localGovt: "",
@@ -54,7 +54,7 @@ const createNINDetails = (ninNumber: string, raw: any): NINDetails => {
 		gender: raw.gender,
 		userId: raw.userid,
 		photoData: raw.photo,
-		issueDate: new Date(raw.ts),
+		issueDate: formatDate(raw.ts),
 		vNinNumber: raw.vNIN,
 		ninNumber
 	}

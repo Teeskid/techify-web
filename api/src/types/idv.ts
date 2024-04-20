@@ -2,7 +2,7 @@ export interface NINDetails {
     firstName: string,
     lastName: string,
     middleName: string,
-    dateOfBirth: Date,
+    dateOfBirth: string,
     phoneNumber: string,
     address: {
         stateName: string,
@@ -13,7 +13,7 @@ export interface NINDetails {
     trackingId: string,
     userId: string,
     photoData: string,
-    issueDate: Date,
+    issueDate: string,
     ninNumber: string,
     vNinNumber: string,
 }

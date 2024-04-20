@@ -30,11 +30,12 @@ import Sheet from '@mui/joy/Sheet';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import * as React from 'react';
+import { Link as RouterLink } from "react-router-dom";
 
 import { getAuth, signOut } from 'firebase/auth';
+import { useAuth } from '../contexts';
 import { closeSidebar } from '../utils/drawer';
 import ColorSchemeToggle from './ColorSchemeToggle';
-import { useAuth } from '../contexts';
 
 function Toggler({
 	defaultExpanded = false,
@@ -66,6 +67,23 @@ function Toggler({
 			</Box>
 		</React.Fragment>
 	);
+}
+
+type NavListItemProps = {
+	link: string,
+	name: string,
+	icon: React.ReactNode
+}
+
+function NavListItem({ link, name, icon, ...rest }: NavListItemProps) {
+	return (
+		<ListItemButton component={RouterLink} to={link} {...rest}>
+			{icon}
+			<ListItemContent>
+				<Typography level="title-sm">{name}</Typography>
+			</ListItemContent>
+		</ListItemButton>
+	)
 }
 
 export default function Sidebar() {
@@ -150,14 +168,7 @@ export default function Sidebar() {
 						'--ListItem-radius': (theme: any) => theme.vars.radius.sm,
 					}}
 				>
-					<ListItem>
-						<ListItemButton component="a" href="/home">
-							<DashboardRoundedIcon />
-							<ListItemContent>
-								<Typography level="title-sm">Dashboard</Typography>
-							</ListItemContent>
-						</ListItemButton>
-					</ListItem>
+					<NavListItem link="/home" name="Dashboard" icon={<DashboardRoundedIcon />} />
 
 					<ListItem nested>
 						<Toggler
@@ -260,7 +271,7 @@ export default function Sidebar() {
 						>
 							<List sx={{ gap: 0.5 }}>
 								<ListItem sx={{ mt: 0.5 }}>
-									<ListItemButton component="a" href="/home/sim-service">Logs</ListItemButton>
+									<ListItemButton component="a" href="/home/virtual-topup">Logs</ListItemButton>
 								</ListItem>
 								<ListItem sx={{ mt: 0.5 }}>
 									<ListItemButton component="a" href="/home/sim-service/servers">Servers</ListItemButton>

@@ -1,0 +1,8 @@
+[
+    {
+      "origin": ["https://api.techify.ng", "http://localhost:3000"],
+      "method": ["GET"],
+      "responseHeader": ["Content-Type"],
+      "maxAgeSeconds": 3600
+    }
+]

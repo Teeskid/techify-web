@@ -1,8 +1,8 @@
 import { type Request, type Response } from "express"
 
-import { resolveAccount } from "../../../tools/pay/gateway"
-import { AuthData } from "../../../types/app"
-import { verifyIdToken } from "../../../utils/app/auth"
+import { resolveAccount } from "../../handlers/pay/gateway"
+import { AuthData } from "../../types/app"
+import { verifyIdToken } from "../../utils/app/auth"
 
 /**
  * Handles request to /users/**

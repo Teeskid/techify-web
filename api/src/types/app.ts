@@ -1,6 +1,9 @@
 import type { VerifyAppCheckTokenResponse } from "firebase-admin/app-check"
 import type { DecodedIdToken } from "firebase-admin/auth"
 
+export interface AppToken extends VerifyAppCheckTokenResponse {
+}
+
 export interface AuthData extends DecodedIdToken {
 }
 

@@ -12,3 +12,5 @@ export const CONTENT_JSON = { contentType: 'application/json' }
 
 // shards count for stats
 export const SHARDS_COUNT = 10
+
+export const DATE_FORMAT = "DD MMM YYYY"

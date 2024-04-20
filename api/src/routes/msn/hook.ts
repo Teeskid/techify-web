@@ -3,7 +3,7 @@
 import { Router as createRouter, type Request, type Response } from "express";
 import { getFirestore } from "firebase-admin/firestore";
 
-import { replyText, sendText } from "../../tools/msn";
+import { replyText, sendText } from "../../handlers/msn";
 import { MessageLine } from "../../types/msn";
 
 const msn = createRouter()

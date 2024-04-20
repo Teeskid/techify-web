@@ -1,0 +1,152 @@
+<%- include("./header", {
+    style: "\
+    @font-face {\
+        font-family: 'OCRFont';\
+        src: url('/static/fonts/OCR.ttf') format('truetype');\
+        font-weight: normal;\
+        font-style: normal;\
+        }\
+    \
+    .id-card {\
+        display: block;\
+        position: relative;\
+        width: 300px;\
+        margin: auto;\
+        z-index: 1;\
+    }\
+    .watermark {\
+        font-family: OCRFont;\
+        font-size: 12px;\
+        top: 58px;\
+        left: 12px;\
+        position: absolute;\
+    }\
+    \
+    .id-card img {\
+        margin: 0;\
+        padding: 0;\
+        width: 100%;\
+        height: 100%;\
+        object-fit: cover;\
+    }\
+    \
+    .id-info {\
+        position: absolute;\
+        top: 50px;\
+        left: 20px;\
+        color: #000000;\
+    }\
+    \
+    p {\
+        font-family: OCRFont;\
+        color: #000000;\
+        font-weight: 600;\
+        font-size: 11px;\
+        margin-bottom: 0;\
+    }\
+    \
+    .details {\
+        margin-left: 60px;\
+        margin-top: 15px;\
+        text-transform: uppercase;\
+    }\
+    \
+    .givennames {\
+        margin-top: 13px;\
+    }\
+    \
+    .dob {\
+        margin-top: 15px;\
+        text-transform: uppercase;\
+        word-spacing: -1px;\
+    }\
+    \
+    .gender {\
+        margin-left: 12px;\
+    }\
+    \
+    .nin {\
+        color: #000000;\
+        margin-top: 19px;\
+        margin-left: -15px;\
+        font-family: OCRFont;\
+        font-size: 26px;\
+        font-weight: 600;\
+        word-spacing: -5px;\
+        letter-spacing: 0px;\
+    }\
+    \
+    .issue {\
+        color: #000000;\
+        margin-top: -13px;\
+        margin-left: 205px;\
+        font-size: 10px;\
+        font-family: OCRFont;\
+        font-weight: 600;\
+        text-transform: uppercase;\
+        word-spacing: -2px;\
+        letter-spacing: 0px;\
+    }\
+    \
+    .photo {\
+        position: absolute;\
+        top: 58px;\
+        left: 12px;\
+        max-width: 61px;\
+        max-height: 84px;\
+    }\
+    \
+    .qrcode {\
+        position: absolute;\
+        top: -31px;\
+        left: 196px;\
+        max-width: 57px;\
+        max-height: 85px;\
+    }\
+    \
+    .qrcode img {\
+        margin: 2px;\
+        margin-top: 4px;\
+        position: relative;\
+        width: 68px;\
+        height: 68px;\
+    }\
+    ",
+    title: `Techify NG - ${ninNumber} Premium NIN Slip` 
+}) %>
+<%- include("./capture") %>
+<div class="container">
+    <div class="id-card">
+        <img src="/static/img/nin_premium_id2.jpg" alt="">
+        <img src="<%= photoData %>" alt="" class="photo">
+        <div class="id-info">
+            <div class="details">
+                <p class="surname mb-0">
+                    <%= lastName %>
+                </p>
+                <p class="givennames mb-0">
+                    <%= firstName %><%= (middleName && middleName !== "" ? `, ${middleName}` : "") %>
+                </p>
+                <p class="dob mb-0">
+                    <span>
+                        <%= dateOfBirth %>
+                    </span>
+                    <span class="gender">
+                        <%= gender %>
+                    </span>
+                </p>
+            </div>
+            <h6 class="issue text-center">
+                <%= issueDate %>
+            </h6>
+            <h5 class="nin text-center">
+                <%= ninNumber.replace(/^(.{4})(.+?)(.{4})$/ig, "$1 $2 $3") %>
+            </h5>
+            <div class="qrcode">
+                <img src="<%= qrCodeData %>" />
+            </div>
+        </div>
+        <!-- <span class="watermark"><%= ninNumber %></span> -->
+    </div>
+</div>
+<%- include("./footer") %>

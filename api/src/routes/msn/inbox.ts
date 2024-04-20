@@ -1,7 +1,7 @@
 import { Router as createRouter } from "express"
 import { getFirestore } from "firebase-admin/firestore"
 
-import { getWhatsAppMedia } from "../../tools/msn"
+import { getWhatsAppMedia } from "../../handlers/msn"
 
 const inbox = createRouter()
 

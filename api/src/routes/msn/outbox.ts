@@ -1,6 +1,6 @@
 import { Router as createRouter, type Request, type Response } from "express"
 
-import { sendText } from "../../tools/msn"
+import { sendText } from "../../handlers/msn"
 
 const outbox = createRouter()
 

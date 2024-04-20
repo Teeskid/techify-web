@@ -20,12 +20,13 @@ initializeApp({
 	databaseURL: "https://techify-ng.firebaseio.com",
 })
 
-const app = express();
+const app = express()
 app.set("view engine", "ejs")
 app.set("views", path.resolve(__dirname, "./views"))
 app.use(parser.json())
 app.use(parser.urlencoded({ extended: false }))
 app.use(cors({ origin: true }))
+app.use("/static", express.static(path.resolve(__dirname, "../static")))
 
 // access log middleware
 app.use((r, res, next) => {
@@ -39,5 +40,6 @@ app.use(routes)
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, async () => {
+	// verifyBVN("azure", "22462565091").then(console.log).catch(console.error)
 	console.log(`Server Running @ ${PORT}`)
 })

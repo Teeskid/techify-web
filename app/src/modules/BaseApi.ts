@@ -7,6 +7,7 @@ export default class BaseApi {
     constructor(baseUrl: string) {
         this.client = axios.create({
             baseURL: baseUrl,
+            timeout: 60000
         })
     }
     async __() {

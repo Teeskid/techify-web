@@ -1,0 +1,200 @@
+<%- include("./header", {
+    style: "\
+    /* Media query for mobile phones */\
+    @media screen and (max-width: 480px) {\
+        table {\
+            font-size: 5px !important;\
+        }\
+    \
+        .photo {\
+            max-width: 40px;\
+        }\
+        \
+        .note-text {\
+            font-size: 6px !important;\
+        }\
+    }\
+    \
+    /* Extra Small Devices (phones) */\
+    @media screen and (max-width: 575.98px) {\
+        table {\
+            font-size: 5px !important;\
+        }\
+        \
+        .photo {\
+            max-width: 50px;\
+        }\
+    }\
+    \
+    /* Small Devices (tablets) */\
+    @media screen and (min-width: 576px) and (max-width: 767.98px) {\
+        table {\
+            font-size: 10px !important;\
+        }\
+        \
+        .photo {\
+            max-width: 60px;\
+        }\
+        \
+        .note-text {\
+            font-size: 10px !important;\
+        }\
+    }\
+    \
+    /* Medium Devices (landscape tablets) */\
+    @media screen and (min-width: 768px) and (max-width: 991.98px) {\
+        table {\
+            font-size: 12px !important;\
+        }\
+        \
+        .photo {\
+            max-width: 70px;\
+        }\
+        \
+        .note-text {\
+            font-size: 10px !important;\
+        }\
+    }\
+    \
+    /* Large Devices (laptops and desktops) */\
+    @media screen and (min-width: 992px) and (max-width: 1199.98px) {\
+        table {\
+            font-size: 12px !important;\
+        }\
+        \
+        .photo {\
+            max-width: 100px;\
+        }\
+        \
+        .note-text {\
+            font-size: 10px !important;\
+        }\
+    }\
+    \
+    /* Extra Large Devices (large desktops) */\
+    @media screen and (min-width: 1200px) {\
+        table {\
+            font-size: 12px !important;\
+        }\
+        \
+        .photo {\
+            max-width: 100px;\
+        }\
+        \
+        .note-text {\
+            font-size: 10px !important;\
+        }\
+    }\
+    ",
+    title: ""
+}) %>
+<%- include("./capture") %>
+<div class="container">
+    <div class="card">
+        <div style="border: 2px solid black;">
+            <table style="width: 100%;" class="table-borderless">
+                <tbody>
+                    <tr class="text-center"
+                        style="border-bottom: 1px solid black;">
+                        <td>
+                            <img src="/static/img/nin_slip_header.jpg"
+                                class="img-fluid">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table style="width: 100%; font-size: 12px;"
+                class="table-borderless info-table">
+                <tbody>
+                    <tr style="border-bottom: 1px solid black;">
+                        <td style="padding-left: 3px;"><b>Tracking ID:</b>
+                        </td>
+                        <td
+                            style="border-right: 1px solid black; padding-right: 3px;">
+                            S1E9NVQ8C4V08U6</td>
+                        <td style="padding-left: 3px;"><b>Surname:</b></td>
+                        <td style="padding-right: 3px;"><%= lastName %></td>
+                        <td rowspan="4" class="border-none"
+                            style="border-left: 1px solid black; border-right: 1px solid black; padding-left: 3px;">
+                            <b>Address:</b> <br>
+                            SARAN BANZA YADO'BUKKUYUM
+                            <br><br>
+                            Bukkuyum
+                            <br>
+                            Zamfara
+                        </td>
+                        <td rowspan="4" class="border-left-none"
+                            align="center">
+                            <img src="<%= photoData %>" class="photo">
+                        </td>
+                    </tr>
+
+                    <tr style="border-bottom: 1px solid black;">
+                        <td style="padding-left: 3px;"><b>NIN:</b></td>
+                        <td
+                            style="border-right: 1px solid black; padding-right: 3px;">
+                            <%= ninNumber %></td>
+                        <td style="padding-left: 3px;"><b>First Name:</b>
+                        </td>
+                        <td><%= firstName %></td>
+                    </tr>
+
+                    <tr>
+                        <td style="border-right: 1px solid black;"
+                            colspan="2"></td>
+                        <td
+                            style="border-bottom: 1px solid black; padding-left: 3px;">
+                            <b>Middle Name:</b>
+                        </td>
+                        <td style="border-bottom: 1px solid black;">JAIDO
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="width-100 border-none" colspan="2"></td>
+                        <td
+                            style="border-left: 1px solid black; padding-left: 3px;">
+                            <b>Gender:</b>
+                        </td>
+                        <td class="border-left-none border-right-thick">
+                            Male
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <table style="width: 100%;" class="table-borderless">
+                <tbody>
+                    <tr
+                        style="border-top: 1px solid black; border-bottom: 1px solid black;">
+                        <td class="text-center text-bold border-left-none"
+                            style="width:20%;">
+                            <p style="margin:5px 0px; font-size:12px; "
+                                class="note-text"><b>Note:</b> This
+                                transaction slip does not confer the right
+                                to the <b>General Multipurpose card</b> (For
+                                any enquiry, please contact) </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <table style="width: 100%; font-size: 12px;"
+                class="table-borderless base-table">
+                <tbody>
+                    <tr class="text-center">
+                        <td>
+                            <img src="/static/img/nin_slip_footer.jpg"
+                                class="img-fluid">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<%- include("./footer") %>

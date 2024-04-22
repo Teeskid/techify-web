@@ -40,6 +40,5 @@ app.use(routes)
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, async () => {
-	// verifyBVN("azure", "22462565091").then(console.log).catch(console.error)
 	console.log(`Server Running @ ${PORT}`)
 })

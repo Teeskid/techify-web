@@ -6,9 +6,9 @@ import { getFirestore } from "firebase-admin/firestore";
 import { replyText, sendText } from "../../handlers/msn";
 import { MessageLine } from "../../types/msn";
 
-const msn = createRouter()
+const hooks = createRouter()
 
-msn.route("/whatsapp").get(async (r: Request, res: Response) => {
+hooks.route("/whatsapp").get(async (r: Request, res: Response) => {
 	if (r.query['hub.mode'] === 'subscribe' && r.query['hub.verify_token'] === process.env.TOKEN) {
 		res.send(r.query['hub.challenge'])
 		return
@@ -38,9 +38,8 @@ msn.route("/whatsapp").get(async (r: Request, res: Response) => {
 				const statuse = statuses?.[0] || null
 				if (contact && message)
 					items.push({ contact, message })
-				if (statuse) {
+				if (statuse)
 					console.log("READ_RECEIPT", statuse)
-				}
 			})
 		})
 		if (items.length === 0)
@@ -63,7 +62,7 @@ msn.route("/whatsapp").get(async (r: Request, res: Response) => {
 	}
 })
 
-msn.all("/telegram", async (r: Request, res: Response) => {
+hooks.all("/telegram", async (r: Request, res: Response) => {
 	// telegram hook receiver
 	res.sendStatus(200)
 	try {
@@ -73,4 +72,4 @@ msn.all("/telegram", async (r: Request, res: Response) => {
 	}
 })
 
-export default msn
+export default hooks

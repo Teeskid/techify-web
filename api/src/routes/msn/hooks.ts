@@ -53,6 +53,7 @@ hooks.route("/whatsapp").get(async (r: Request, res: Response) => {
 		await Promise.all(items.map(async (item) => {
 			let display = item.message.type === "text" ? `${item.message.text.body}` : `${item.message.document.filename}`
 			display = `WhatsApp {*${item.contact.profile.name}*}: ${display}\n`
+			await sendText("whatsapp", "2348020789906", display)
 			await replyText("whatsapp", item.contact.wa_id, "Okay Tam Nagode. Allah ya saka da Alkhairi", item.message.id)
 			await sendText("telegram", "2348020789906", display)
 		}))

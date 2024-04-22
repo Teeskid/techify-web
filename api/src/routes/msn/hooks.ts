@@ -9,7 +9,7 @@ import { MessageLine } from "../../types/msn";
 const hooks = createRouter()
 
 hooks.route("/whatsapp").get(async (r: Request, res: Response) => {
-	if (r.query['hub.mode'] === 'subscribe' && r.query['hub.verify_token'] === process.env.TOKEN) {
+	if (r.query['hub.mode'] === 'subscribe' && r.query['hub.verify_token'] === process.env.MSN_API_V1_XHOOK) {
 		res.send(r.query['hub.challenge'])
 		return
 	}

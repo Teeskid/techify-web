@@ -1,10 +1,66 @@
-/** @module routes/app/hooks/msn */
+/** @module routes/msn */
 
 import { Router as createRouter, type Request, type Response } from "express";
 import { getFirestore } from "firebase-admin/firestore";
 
-import { replyText, sendText } from "../../handlers/msn";
-import { MessageLine } from "../../types/msn";
+import { replyText, sendText } from "../handlers/msn";
+import { MessageLine } from "../types/msn";
+import { getWhatsAppMedia } from "../handlers/msn"
+
+const msn = createRouter()
+
+/**
+ * inbox routing
+ */
+const inbox = createRouter()
+
+inbox.get("/get-media", async (r, res) => {
+    const media = await getWhatsAppMedia(r.query.mediaId as string)
+    res.json({
+        code: 200,
+        data: media
+    })
+})
+
+inbox.get("/list-all", async (r, res) => {
+	const list = await getFirestore().collection("waba").get()
+	const data = list.docs.forEach((doc) => ({
+		id: doc.id,
+		...doc.data()
+	}))
+	res.json({
+		data
+	})
+})
+
+const outbox = createRouter()
+
+outbox.get("/", async (r, res) => {
+	res.sendStatus(200)
+})
+
+outbox.get("/send", async (r, res) => {
+	res.sendStatus(200)
+	const client = String(r.query.client).trim()
+	try {
+		// 2349091287856
+		await sendText("whatsapp", client, "Malam Abdul Ya Kake?")
+	} catch (error: Error | unknown) {
+		console.error(error)
+	}
+})
+
+outbox.all("/send-sms", (r: Request, res: Response) => {
+	res.sendStatus(200)
+})
+
+outbox.all("/send-whatsapp", (r: Request, res: Response) => {
+	res.sendStatus(200)
+})
+
+outbox.all("/send-telegram", (r: Request, res: Response) => {
+	res.sendStatus(200)
+})
 
 const hooks = createRouter()
 
@@ -22,6 +78,9 @@ hooks.route("/whatsapp").get(async (r: Request, res: Response) => {
 	}
 	// goes fine here
 	res.sendStatus(200)
+	// log it up
+	console.log(r.body)
+	
 	const { entry } = r.body
 	const items: MessageLine[] = []
 	try {
@@ -73,4 +132,8 @@ hooks.all("/telegram", async (r: Request, res: Response) => {
 	}
 })
 
-export default hooks
+msn.use("/hooks", hooks)
+msn.use("/inbox", inbox)
+msn.use("/outbox", outbox)
+
+export default msn

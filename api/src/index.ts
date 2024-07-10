@@ -8,7 +8,7 @@ import path from "path";
 
 import routes from "./routes";
 
-// kill server on restart
+// kill server on exit / restart
 process.on("SIGINT", () => {
 	process.kill(process.pid)
 })
@@ -40,5 +40,5 @@ app.use(routes)
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, async () => {
-	console.log(`Server Running @ ${PORT}`)
+	console.log(`Node Serves @ ${PORT}`)
 })

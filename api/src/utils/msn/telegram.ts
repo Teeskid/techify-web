@@ -9,9 +9,10 @@ const telegram = axios.create({
 })
 
 export class Telegram implements Server {
-	async sendTemplate(recipient: string, template: string): Promise<void> {
+	async sendTemplate(recipient: string, template: string): Promise<string | false> {
+		return false
 	}
-	async sendMessage(recipient: string, message: string) {
+	async sendMessage(recipient: string, message: string): Promise<string | false> {
 		try {
 			const { data } = await telegram.request({
 				params: {
@@ -19,14 +20,15 @@ export class Telegram implements Server {
 					msg: message
 				}
 			})
-			console.log("TLG_MSN_SUCCESS", data)
+			return data ? "success" : false
 		} catch (error: Error | unknown) {
 			if (axios.isAxiosError(error)) {
-				console.error("TLG_MSN_ERROR", error.response?.data)
+				console.error("MSN_ERROR", error.response?.data)
+			} else {
+				console.error("MSN_ERROR", error)
 			}
+			return false
 		}
-	}
-	async replyMessage(recipient: string, message: string, mainId: string): Promise<void> {
 	}
 }
 

@@ -97,7 +97,6 @@ export type PayLoad = {
 }
 
 export interface Server {
-    sendMessage(recipient: string, message: string): Promise<void>
-    sendTemplate(recipient: string, template: string): Promise<void>
-    replyMessage(recipient: string, message: string, mainId: string): Promise<void>
+    sendMessage(recipient: string, message: string, mainId?: string): Promise<string | false>
+    sendTemplate(recipient: string, template: string, mainId?: string): Promise<string | false>
 }

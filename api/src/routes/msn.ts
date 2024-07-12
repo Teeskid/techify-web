@@ -3,43 +3,56 @@
 import { Router as createRouter, type Request, type Response } from "express";
 import { getFirestore } from "firebase-admin/firestore";
 
-import { replyText, sendText } from "../handlers/msn";
-import { MessageLine } from "../types/msn";
-import { getWhatsAppMedia } from "../handlers/msn"
+import { getWhatsAppMedia } from "../handlers/msn/media"
+import { sendText, sendTemplate } from "../handlers/msn/outbox";
+import type { MessageLine } from "../types/msn";
 
+/**
+ * msn-routing
+ */
 const msn = createRouter()
 
 /**
- * inbox routing
+ * msn-top
  */
-const inbox = createRouter()
-
-inbox.get("/get-media", async (r, res) => {
-    const media = await getWhatsAppMedia(r.query.mediaId as string)
+msn.get("/get-whatsapp-media", async (r: Request, res: Response) => {
+	const mediaId = String(r.query.mediaId as any).trim()
+	if (mediaId.length === 0) {
+		res.json({
+			code: 403,
+			text: "invalid argument provided"
+		})
+	}
+    const data = await getWhatsAppMedia(mediaId)
     res.json({
         code: 200,
-        data: media
+        data
     })
 })
 
-inbox.get("/list-all", async (r, res) => {
+/**
+ * msn-inbox
+ */
+msn.get("/inbox/list-all", async (r: Request, res: Response) => {
 	const list = await getFirestore().collection("waba").get()
 	const data = list.docs.forEach((doc) => ({
 		id: doc.id,
 		...doc.data()
 	}))
 	res.json({
+		code: 200,
 		data
 	})
 })
 
-const outbox = createRouter()
-
-outbox.get("/", async (r, res) => {
+/**
+ * msn-outbox
+ */
+msn.get("/outbox", async (r, res) => {
 	res.sendStatus(200)
 })
 
-outbox.get("/send", async (r, res) => {
+msn.get("/outbox/send", async (r, res) => {
 	res.sendStatus(200)
 	const client = String(r.query.client).trim()
 	try {
@@ -50,21 +63,30 @@ outbox.get("/send", async (r, res) => {
 	}
 })
 
-outbox.all("/send-sms", (r: Request, res: Response) => {
+msn.all("/outbox/send-sms", (r: Request, res: Response) => {
 	res.sendStatus(200)
 })
 
-outbox.all("/send-whatsapp", (r: Request, res: Response) => {
+msn.all("/outbox/send-whatsapp", async (r: Request, res: Response) => {
+	const line1 = await sendTemplate("whatsapp", "2348020789906", "sms_begin")
+	const line2 = await sendText("whatsapp", "2348020789906", "Did you see?", line1 as string)
+	res.json({
+		code: 200,
+		text: "success",
+		data: {
+			line1, line2
+		},
+	})
+})
+
+msn.all("/outbox/send-telegram", (r: Request, res: Response) => {
 	res.sendStatus(200)
 })
 
-outbox.all("/send-telegram", (r: Request, res: Response) => {
-	res.sendStatus(200)
-})
-
-const hooks = createRouter()
-
-hooks.route("/whatsapp").get(async (r: Request, res: Response) => {
+/**
+ * msn-hooks
+ */
+msn.route("/hooks/whatsapp").get(async (r: Request, res: Response) => {
 	if (r.query['hub.mode'] === 'subscribe' && r.query['hub.verify_token'] === process.env.MSN_API_V1_XHOOK) {
 		res.send(r.query['hub.challenge'])
 		return
@@ -72,19 +94,23 @@ hooks.route("/whatsapp").get(async (r: Request, res: Response) => {
 	res.sendStatus(400)
 }).post(async (r: Request, res: Response) => {
 	if (typeof r.body !== 'object' || r.body.object !== "whatsapp_business_account") {
+		console.error("WABA_HOOK", JSON.stringify(r.body))
 		res.sendStatus(400)
-		console.error("WABA_ERROR", JSON.stringify(r.body))
 		return
 	}
-	// goes fine here
-	res.sendStatus(200)
-	// log it up
+	// log it up here
 	console.log(r.body)
 	
-	const { entry } = r.body
-	const items: MessageLine[] = []
+	// goes fine here
+	res.sendStatus(200)
+	
+	// forward to telegram
+	await sendText("telegram", "2348145737179", JSON.stringify(r.body))
+
+	// get on with real business
 	try {
-		entry.forEach(({ changes }: any) => {
+		const items: MessageLine[] = []
+		r.body.entry.forEach(({ changes }: any) => {
 			changes.forEach(({ field, value }: any) => {
 				if (field !== "messages" || value.messaging_product !== "whatsapp")
 					return
@@ -112,18 +138,16 @@ hooks.route("/whatsapp").get(async (r: Request, res: Response) => {
 		await Promise.all(items.map(async (item) => {
 			let display = item.message.type === "text" ? `${item.message.text.body}` : `${item.message.document.filename}`
 			display = `WhatsApp {*${item.contact.profile.name}*}: ${display}\n`
-			await sendText("whatsapp", "2348020789906", display)
-			await replyText("whatsapp", item.contact.wa_id, "Okay Tam Nagode. Allah ya saka da Alkhairi", item.message.id)
-			await sendText("telegram", "2348020789906", display)
+			await sendText("telegram", "2348145737179", display)
 		}))
 	} catch (error: Error | unknown) {
 		console.error(error)
-		console.log("PAYLOAD", JSON.stringify(entry))
 	}
 })
 
-hooks.all("/telegram", async (r: Request, res: Response) => {
+msn.all("/hooks/telegram", async (r: Request, res: Response) => {
 	// telegram hook receiver
+	console.log("TLG_HOOK", r.body)
 	res.sendStatus(200)
 	try {
 		await sendText("whatsapp", "2348020789906", JSON.stringify(r.body))
@@ -131,9 +155,5 @@ hooks.all("/telegram", async (r: Request, res: Response) => {
 		console.error(error)
 	}
 })
-
-msn.use("/hooks", hooks)
-msn.use("/inbox", inbox)
-msn.use("/outbox", outbox)
 
 export default msn

@@ -1,4 +1,4 @@
-import axios, { type AxiosError } from "axios"
+import axios from "axios"
 import crypto from "crypto"
 
 import type { Server } from "../../types/msn"
@@ -6,6 +6,7 @@ import type { Server } from "../../types/msn"
 if (!process.env.MSN_API_V1_TOKEN || !process.env.MSN_API_V1_CRYPT)
 	throw new Error("missing required env variables")
 
+// create proof mac
 const proofMac = crypto.createHmac("sha256", process.env.MSN_API_V1_CRYPT)
 proofMac.update(process.env.MSN_API_V1_TOKEN)
 const proofSec = { "appsecret_proof": proofMac.digest("hex") }
@@ -34,67 +35,80 @@ export class WhatsApp implements Server {
 					"name": template,
 					"language": {
 						"code": "en_GB"
-					}
+					},
+					"components": [
+						{
+							"type": "body",
+							"parameters": [
+								{
+									"type": "text",
+									"text": "J$FpnYnP"
+								},
+							]
+						},
+						{
+							"type": "button",
+							"sub_type": "url",
+							"index": "0",
+							"parameters": [
+								{
+									"type": "text",
+									"text": "J$FpnYnP"
+								}
+							]
+						}
+					]
 				}
 			})
-			console.log("WABA_MSN_SUCCESS", data)
+			return data.messages?.[0].id || false
 		} catch (error: Error | unknown) {
 			if (axios.isAxiosError(error)) {
-				console.error("WABA_MSN_SUCCESS", error.response?.data)
+				console.error("MSN_ERROR", error.response?.data)
+			} else {
+				console.error("MSN_ERROR", error)
 			}
+			return false
 		}
 	}
-	async sendMessage(recipient: string, message: string) {
+	async sendMessage(recipient: string, message: string, context?: string) {
 		const payLoad: Record<string, string | object> = {
 			"messaging_product": "whatsapp",
 			"recipient_type": "individual",
 			"to": recipient,
 			"type": "text",
 			"text": {
-				"preview_url": false,
+				"preview_url": true,
 				"body": message
 			}
 		}
-		try {
-			const { data } = await whatsapp.post("/messages", payLoad)
-			console.log("WABA_MSN_SUCCESS", data)
-		} catch (error: AxiosError | unknown) {
-			if (axios.isAxiosError(error)) {
-				console.error("WABA_MSN_SUCCESS", error.response?.data)
-			}
-		}
-	}
-	async replyMessage(recipient: string, message: string, mainId: string) {
-		const payLoad: Record<string, string | object> = {
-			"messaging_product": "whatsapp",
-			"recipient_type": "individual",
-			"to": recipient,
-			"type": "text",
-			"text": {
-				"preview_url": false,
-				"body": message
-			}
-		}
-		if (mainId && mainId !== "") {
+		if (context && context !== "") {
 			payLoad.context = {
-				"message_id": mainId
+				"message_id": context
 			}
 		}
 		try {
 			const { data } = await whatsapp.post("/messages", payLoad)
-			console.log("WABA_MSN_SUCCESS", data)
-		} catch (error: AxiosError | unknown) {
+			return data.messages?.[0].id || false
+		} catch (error: Error | unknown) {
 			if (axios.isAxiosError(error)) {
-				console.error("WABA_MSN_SUCCESS", error.response?.data)
+				console.error("MSN_ERROR", error.response?.data)
+			} else {
+				console.error("MSN_ERROR", error)
 			}
+			return false
 		}
 	}
 	async getMediaFile(mediaId: string) {
 		try {
 			const { data } = await whatsapp.get(`/media/${mediaId}`)
 			return data
-		} catch (error: AxiosError | unknown) {
-			return error
+		} catch (error: Error | unknown) {
+			if (axios.isAxiosError(error)) {
+				console.error("MSN_ERROR", error.response?.data)
+			} else {
+				console.error("MSN_ERROR", error)
+			}
+			return false
 		}
 	}
 }

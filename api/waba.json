@@ -1,0 +1,39 @@
+{
+    "object": "whatsapp_business_account",
+    "entry": [
+        {
+            "id": "158934390642451",
+            "changes": [
+                {
+                    "value": {
+                        "messaging_product": "whatsapp",
+                        "metadata": {
+                            "display_phone_number": "2348145737179",
+                            "phone_number_id": "184445134746588"
+                        },
+                        "contacts": [
+                            {
+                                "profile": {
+                                    "name": "umarsulemanjikamshi"
+                                },
+                                "wa_id": "2349040838705"
+                            }
+                        ],
+                        "messages": [
+                            {
+                                "from": "2349040838705",
+                                "id": "wamid.HBgNMjM0OTA0MDgzODcwNRUCABIYIEFGN0Q5OEVGODBBN0E4MEYxNjE4MjREQjI4NTgyMEY0AA==",
+                                "timestamp": "1710359032",
+                                "text": {
+                                    "body": "Aslm"
+                                },
+                                "type": "text"
+                            }
+                        ]
+                    },
+                    "field": "messages"
+                }
+            ]
+        }
+    ]
+}

@@ -16,7 +16,7 @@
   "scripts": {
     "build": "npx tsc",
     "watch": "npx tsc --watch",
-    "start": "nodemon --exec ts-node ./src/index.ts",
+    "start": "nodemon --exec ts-node ./src/index.ts --watch src",
     "serve": "node ./build/index.js"
   },
   "devDependencies": {

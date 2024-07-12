@@ -1,25 +1,23 @@
-/** @module routes/app/hooks/pay */
+/** @module handlers/pay/hooks  */
 
 import * as crypto from "crypto";
-import { Router as createRouter, type Request, type Response } from "express";
+import type { Request, Response } from "express";
 import { getAuth, type UserRecord } from "firebase-admin/auth";
 
-import { sendText } from "../../handlers/msn";
+import { sendText } from "../../handlers/msn/outbox";
 import { chargeWallet } from "../../handlers/vtu/users";
 import { chargeVirtual } from "../../utils/pay/nuban";
 import { reportError } from "../../utils/vtu";
 import { DEBUG_MODE } from "../../utils/vtu/const";
 import { getUidForNuban } from "../../utils/vtu/users";
 
-const pay = createRouter();
-
 /**
- * Web Hook For Payment API V1
+ * Web Hook For Paystack
  * @param {Request} r
  * @param {Response} res
  * @return {Promise}
  */
-pay.all('/paystack', async (r: Request, res: Response): Promise<void> => {
+export const payStackHook = async (r: Request, res: Response): Promise<void> => {
 	// verify event source
 	await sendText("telegram", "2348020789906", 'Hook received')
 	if (!DEBUG_MODE) {
@@ -58,15 +56,15 @@ pay.all('/paystack', async (r: Request, res: Response): Promise<void> => {
 		const data = JSON.stringify({ headers: r.headers, body: r.body })
 		await reportError(`${(<Error>error).message}: ${data}`)
 	}
-})
+}
 
 /**
- * Web Hook For Payment API V3
+ * Web Hook For Kudabank
  * @param {Request} r
  * @param {Response} res
  * @return {Promise<void>}
  */
-pay.all("/kudabank", async (r: Request, res: Response): Promise<void> => {
+export const kudaBankHook = async (r: Request, res: Response): Promise<void> => {
 	try {
 
 		if (!DEBUG_MODE) {
@@ -115,7 +113,7 @@ pay.all("/kudabank", async (r: Request, res: Response): Promise<void> => {
 		const data = JSON.stringify({ headers: r.headers, body: r.body })
 		await reportError(`${(<Error>error).message}: ${data}`)
 	}
-})
+}
 
 /**
  * Web Hook For Payment API V3
@@ -123,7 +121,7 @@ pay.all("/kudabank", async (r: Request, res: Response): Promise<void> => {
  * @param {Response} res
  * @return {Promise<void>}
  */
-pay.all("/monnify", async (r: Request, res: Response): Promise<void> => {
+export const monnifyHook = async (r: Request, res: Response): Promise<void> => {
 	// let's verify the event sent
 	try {
 		const [, PAY_API_V3_SECRET] = (process.env.PAY_API_V2_XAUTH as string).split(':', 2)
@@ -418,16 +416,16 @@ pay.all("/monnify", async (r: Request, res: Response): Promise<void> => {
 	 * Failed Refund: This is sent when an initiated refund fails.
 	 * Settlement Completion: This is sent when settlement to your bank account or wallet is processed successfully.
 	 */
-})
+}
 
 /**
- * Web Hook For Payment API V4
+ * Web Hook For FlutterWave
  * @param {Request} r
  * @param {Response} res
  * @return {Promise<void>}
  */
-pay.all("/flutter", async (r: Request, res: Response): Promise<void> => {
+export const flutterHook = async (r: Request, res: Response): Promise<void> => {
 	res.sendStatus(400)
-})
+}
 
-export default pay
+export default {}

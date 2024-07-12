@@ -69,7 +69,7 @@ msn.all("/outbox/send-sms", (r: Request, res: Response) => {
 
 msn.all("/outbox/send-whatsapp", async (r: Request, res: Response) => {
 	const line1 = await sendTemplate("whatsapp", "2348020789906", "sms_begin")
-	const line2 = await sendText("whatsapp", "2348020789906", "Did you see?", line1 as string)
+	const line2 = await sendText("whatsapp", "+2348020789906", "Did you see?")
 	res.json({
 		code: 200,
 		text: "success",
@@ -93,14 +93,12 @@ msn.route("/hooks/whatsapp").get(async (r: Request, res: Response) => {
 	}
 	res.sendStatus(400)
 }).post(async (r: Request, res: Response) => {
+	// log it up here
+	console.error("WABA_HOOK", JSON.stringify(r.body))
 	if (typeof r.body !== 'object' || r.body.object !== "whatsapp_business_account") {
-		console.error("WABA_HOOK", JSON.stringify(r.body))
 		res.sendStatus(400)
 		return
-	}
-	// log it up here
-	console.log(r.body)
-	
+	}	
 	// goes fine here
 	res.sendStatus(200)
 	

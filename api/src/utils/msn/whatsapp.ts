@@ -77,7 +77,7 @@ export class WhatsApp implements Server {
 			"to": recipient,
 			"type": "text",
 			"text": {
-				"preview_url": true,
+				"preview_url": false,
 				"body": message
 			}
 		}

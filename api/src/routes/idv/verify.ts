@@ -24,9 +24,9 @@ verify.get("/bvn", async (r, res) => {
 	}
 })
 
-verify.post("/nin", async (r, res) => {
+verify.all("/nin", async (r, res) => {
 	try {
-		const { ...options } = r.body as object
+		const { ...options } = Object.assign({}, r.query, r.body)
 		const transactionId = await handleVerifyNIN({} as AuthData, options)
 		res.json({
 			code: 200,

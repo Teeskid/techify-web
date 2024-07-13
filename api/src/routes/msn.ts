@@ -16,7 +16,7 @@ const msn = createRouter()
  * msn-top
  */
 msn.get("/get-whatsapp-media", async (r: Request, res: Response) => {
-	const mediaId = String(r.query.mediaId as any).trim()
+	const mediaId = String(r.query.mediaId || "").trim()
 	if (mediaId.length === 0) {
 		res.json({
 			code: 403,
@@ -33,7 +33,7 @@ msn.get("/get-whatsapp-media", async (r: Request, res: Response) => {
 /**
  * msn-inbox
  */
-msn.get("/inbox/list-all", async (r: Request, res: Response) => {
+msn.get("/inbox/get-list", async (r: Request, res: Response) => {
 	const list = await getFirestore().collection("waba").get()
 	const data = list.docs.forEach((doc) => ({
 		id: doc.id,
@@ -53,13 +53,14 @@ msn.get("/outbox", async (r, res) => {
 })
 
 msn.get("/outbox/send", async (r, res) => {
-	res.sendStatus(200)
-	const client = String(r.query.client).trim()
+	const client = String(r.query.client || "").trim()
 	try {
 		// 2349091287856
-		await sendText("whatsapp", client, "Malam Abdul Ya Kake?")
+		await sendText("whatsapp", client, "Malam Ya Kake?")
+		res.sendStatus(200)
 	} catch (error: Error | unknown) {
 		console.error(error)
+		res.sendStatus(500)
 	}
 })
 

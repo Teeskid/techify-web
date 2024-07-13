@@ -3,16 +3,13 @@ import crypto from "crypto"
 
 import type { Server } from "../../types/msn"
 
-if (!process.env.MSN_API_V1_TOKEN || !process.env.MSN_API_V1_CRYPT)
-	throw new Error("missing required env variables")
-
 // create proof mac
-const proofMac = crypto.createHmac("sha256", process.env.MSN_API_V1_CRYPT)
-proofMac.update(process.env.MSN_API_V1_TOKEN)
+const proofMac = crypto.createHmac("sha256", process.env.MSN_API_V1_CRYPT as string)
+proofMac.update(process.env.MSN_API_V1_TOKEN as string)
 const proofSec = { "appsecret_proof": proofMac.digest("hex") }
 
 const whatsapp = axios.create({
-	baseURL: `https://graph.facebook.com/v19.0/${process.env.MSN_API_V1_PHONE}`,
+	baseURL: `https://graph.facebook.com/v20.0/${process.env.MSN_API_V1_PHONE}`,
 	headers: {
 		"Accept": "application/json",
 		"Content-Type": "application/json",
@@ -98,9 +95,10 @@ export class WhatsApp implements Server {
 			return false
 		}
 	}
-	async getMediaFile(mediaId: string) {
+	async getMedia(mediaId: string) {
 		try {
-			const { data } = await whatsapp.get(`/media/${mediaId}`)
+			const { data } = await whatsapp.get(`../${mediaId}`)
+			console.log(data)
 			return data
 		} catch (error: Error | unknown) {
 			if (axios.isAxiosError(error)) {

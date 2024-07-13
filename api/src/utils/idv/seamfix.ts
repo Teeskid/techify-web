@@ -6,12 +6,9 @@ import { cacheRequest, requestCache, requestRef } from ".."
 import type { BVNDetails, NINDetails } from "../../types/idv"
 import { formatDate } from "./verify"
 
-if (!process.env.IDV_API_V1_XUSER || !process.env.IDV_API_V1_TOKEN)
-	throw new Error("missing env variables")
-
-const [ninKeys, bvnKeys] = process.env.IDV_API_V1_TOKEN.split(":", 2)
+const [ninKeys, bvnKeys] = process.env.IDV_API_V1_TOKEN?.split(":", 2) || ['', '']
 const [ninKey1, ninKey2] = ninKeys.split("/", 2)
-const [, bvnKey2] = bvnKeys.split("/", 2)
+const [, bvnKey2] = bvnKeys?.split("/", 2) || ['', '']
 
 const seamFix = axios.create({
 	baseURL: "https://api.verified.africa/sfx-verify/v3/id-service/",

@@ -1,3 +1,5 @@
 node_modules/
 build/
+*.firebase.json
 .firebase*.json
+**/.firebase.json

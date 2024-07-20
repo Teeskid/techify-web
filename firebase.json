@@ -4,7 +4,7 @@
 	},
 	"firestore": {
 		"rules": "firestore.rules",
-		"indexes": "firestore-indexes.json"
+		"indexes": "firestore.json"
 	},
 	"functions": [
 		{
@@ -22,10 +22,12 @@
 		{
 			"site": "techify-ng",
 			"public": "app/build",
-			"predeploy": "yarn --cwd app build",
 			"ignore": [
 				"api/**",
 				"apx/**",
+				"*.md",
+				"*.json",
+				"*.rules",
 				"firebase.json",
 				"**/.*",
 				"**/node_modules/**"
@@ -61,8 +63,15 @@
 			],
 			"rewrites": [
 				{
-					"source": "**",
+					"source": "/foo/**",
 					"destination": "/index.html"
+				}
+			],
+			"redirects": [
+				{
+					"source": "**",
+					"destination": "https://google.com",
+					"type": 302
 				}
 			]
 		}

@@ -40,5 +40,5 @@ app.use(routes)
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, async () => {
-	console.log(`Node Serves @ ${PORT}`)
+	console.log(`NODE-SERVICE @ ${PORT}`)
 })

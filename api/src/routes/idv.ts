@@ -4,6 +4,7 @@ import { Router as createRouter  } from "express";
 import { getStorage } from "firebase-admin/storage";
 
 import { handleVerifyBVN, handleVerifyNIN, handleViewResult } from "../handlers/idv/verify";
+import { clearCache } from "../utils/cache";
 import type { AuthData } from "../types/app";
 
 const idv = createRouter()
@@ -59,6 +60,23 @@ idv.get("/view-result", async (r, res) => {
 	try {
 		const { viewId, result } = await handleViewResult({} as AuthData, options)
 		res.render(viewId, result)
+	} catch (error: Error | unknown) {
+		console.error("IDV-RES", error)
+		res.sendStatus(500)
+	}
+})
+
+idv.get("/clear-cache", async () => {
+	try {
+		const done = await clearCache(100)
+		if (done)
+			console.log(`CACHE CLEARED!`)
+		else
+			console.log(`CACHE CLEAN!`)
+		res.json({
+			code: 200,
+			text: "success"
+		})
 	} catch (error: Error | unknown) {
 		console.error("IDV-RES", error)
 		res.sendStatus(500)

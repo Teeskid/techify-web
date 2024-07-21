@@ -1,30 +1,10 @@
-/** @module tools/idv/verify */
+/** @module handlers/idv/verify */
 
 import { AuthData } from "../../types/app"
 import type { BVNDetails, NINDetails } from "../../types/idv"
-import { azure, seamfix } from "../../utils/idv"
-import { getTransaction, putTransaction, saveFilesLocal } from "../../utils/idv/verify"
-
-export const verifyByNIN = async (ninNumber: string): Promise<NINDetails> => (
-	await seamfix.verifyNIN(ninNumber) as NINDetails
-)
-
-export const verifyByVNIN = async (ninNumber: string): Promise<NINDetails> => (
-	await seamfix.verifyVNIN(ninNumber)
-)
-
-export const verifyByPhone = async (phoneNumber: string): Promise<NINDetails> => (
-	await seamfix.verifyPNIN(phoneNumber)
-)
-
-export const verifyBVN = async (index: string, bvnNumber: string): Promise<BVNDetails> => {
-	let data: BVNDetails
-	if (index === "seamfix")
-		data = await seamfix.verifyBVN(bvnNumber)
-	else
-		data = await azure.verifyBVN(bvnNumber)
-	return data
-}
+import { getTransaction, putTransaction } from "../../utils/recents"
+import { verifyByNIN, verifyByVNIN, verifyByBVN, verifyByPhone } from "../../utils/idv/verify"
+import { saveFilesLocal } from "../../utils/cache"
 
 export const handleVerifyNIN = async (auth: AuthData, data: object): Promise<string> => {
 	let { paramType, paramValue } = data as Record<string, string>
@@ -50,16 +30,16 @@ export const handleVerifyBVN = async (auth: AuthData, data: object): Promise<str
 		throw new Error("invalid bvn number provided")
 	let details: BVNDetails | object
 	if (paramType === "phone") {
-		details = await verifyBVN("azure", paramValue)
+		details = await verifyByBVN("azure", paramValue)
 	} else {
-		details = await verifyBVN("azure", paramValue)
+		details = await verifyByBVN("azure", paramValue)
 	}
 	return await putTransaction(details)
 }
 
 export const handleViewResult = async (auth: AuthData, data: object) => {
 	let { transactionId, viewFormat } = data as Record<string, string>
-
+	// find the suitable view
 	let viewId: string
 	let result: object = await getTransaction(transactionId)
 	if (viewFormat === "normal")
@@ -69,11 +49,11 @@ export const handleViewResult = async (auth: AuthData, data: object) => {
 	else if (viewFormat === "premium")
 		viewId = "nin-premium"
 	else {
-		viewId = "raw-details"
+		viewId = "../../raw-data"
 		result = { data: result }
 	}
+	// form and return results
 	viewId = `prints/idv/${viewId}`
-
 	return {
 		viewId,
 		result

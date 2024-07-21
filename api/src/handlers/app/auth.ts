@@ -1,6 +1,6 @@
-import { Router as createRouter } from "express"
-import { getAuth, type UserRecord } from "firebase-admin/auth"
-import { FieldValue, getFirestore, type Transaction } from "firebase-admin/firestore"
+/** @module handlers/app/auth */
+
+import { Router as createRouter, type Request, type Response } from "express";
 
 import { UserRole } from "apx/types"
 
@@ -8,9 +8,30 @@ import { verifyIdToken } from "../../utils/app/auth"
 import { MERGE_DOC, reportError, shardDoc } from "../../utils/vtu"
 import { OrderConv, StatConv, UserConv, WalletConv } from "../../utils/vtu/convs"
 
-const auth = createRouter()
+export const AuthWare = async (r, res, runNext) => {
+	const [, pathName] = r.path.split("/", 2)
+	if (pathName === "auth") {
+		runNext()
+		return
+	}
+	const appToken = await verifyAppCheck(r)
+	const authToken = await verifyIdToken(r)
+	setContext(r, appToken, authToken)
+	// if (r.path.includes("/admin") || r.path.includes("/users")) {
+	// 	if (!appToken || !authToken) {
+	// 		res.json({
+	// 			code: 401,
+	// 			text: "failed to authorize request"
+	// 		})
+	// 	} else {
+	// 		runNext()
+	// 	}
+	// 	return
+	// }
+	runNext()
+}
 
-auth.all("/auth", async (r, res) => {
+export const SignIn = async (r: Request, res: Response) => {
 	res.sendStatus(200)
 	const context = await verifyIdToken(r)
 	if (!context) {
@@ -20,9 +41,9 @@ auth.all("/auth", async (r, res) => {
 
 	console.log("AUTH: ", { ...context, deviceId })
 	console.log("BODY: ", r.body)
-})
+}
 
-auth.post("/sign-up", async (r, res): Promise<void> => {
+export const SignUp = async (r: Request, res: Response) => {
 	const auth = getAuth()
 	const store = getFirestore()
 	let user: UserRecord | undefined
@@ -92,9 +113,9 @@ auth.post("/sign-up", async (r, res): Promise<void> => {
 			real: (error as Error).message
 		})
 	}
-})
+}
 
-auth.post("/sign-down", async (user: UserRecord) => {
+export const ClearUser = async (r, res, runNext) => {
 	try {
 		const firestore = getFirestore()
 		const userRef = firestore.collection("users").doc(user.uid).withConverter(UserConv)
@@ -117,30 +138,6 @@ auth.post("/sign-down", async (user: UserRecord) => {
 		// handle errors
 	}
 	return Promise.resolve()
-})
+}
 
-auth.post("/recover", async (r, res) => {
-	res.sendStatus(200)
-})
-
-/**
- * Updates apps list cache file
- * @param {FirestoreEvent<Change<DocumentSnapshot> | undefined, EventProps>} event
- * @return {Promise<void>}
- */
-// const metaUpdate = async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, EventProps>): Promise<void> => {
-// 	try {
-// 		if (event.params.api === "cfg")
-// 			await updateConfig(event)
-// 		else if (event.params.api === "product") {
-// 			await updateProducts(event)
-// 		} else if (event.params.api === "payment") {
-// 			await updatePayments(event)
-// 		}
-// 	} catch (error: Error | unknown) {
-// 		// console.error(error)
-// 	}
-// 	return Promise.resolve()
-// }
-
-export default auth
+export default {}

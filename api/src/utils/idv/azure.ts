@@ -11,44 +11,19 @@ const azure = axios.create({
 	timeout: 60000
 })
 
-const verifyNIN = async (ninNumber: string) => {
-	// console.error(ninNumber)
-	// throw new Error("unimplemented")
-	const { data } = await azure.post("/ninvalidationsimple/", {
-		nin: ninNumber
-	}).catch((error: AxiosError) => ({
-		data: {
-			error: error.message,
-			data: error.response?.data
-		}
-	}))
-	console.log(data)
-	if (data.error !== undefined)
-		return data
-	return {
-		firstName: data.firstName,
-		middleName: data.middleName,
-		lastName: data.lastName,
-		gender: data.gender,
-		address: data.residentialAddress,
-		dateOfBirth: data.dateOfBirth,
-		phoneNumber: data.phoneNumber,
-		photoData: "",
-		ninNumber
+const handleErr = (error: AxiosError) => ({
+	data: {
+		error: error.message,
+		data: error.response?.data
 	}
-}
+})
 
 const verifyBVN = async (bvnNumber: string) => {
 	const { data } = await azure.post("/bvnvalidationsimple/", {
 		bvn: bvnNumber
-	}).catch((error: AxiosError) => ({
-		data: {
-			error: error.message,
-			data: error.response?.data
-		}
-	}))
-	if (data.error !== undefined)
-		return data
+	}).catch(handleErr)
+	if (!data || data.error !== undefined)
+		throw new Error(data.error)
 	return {
 		firstName: data.firstName,
 		middleName: data.middleName,
@@ -62,4 +37,4 @@ const verifyBVN = async (bvnNumber: string) => {
 	}
 }
 
-export default { verifyBVN, verifyNIN }
+export default { verifyBVN }

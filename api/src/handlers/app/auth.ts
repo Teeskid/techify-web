@@ -1,14 +1,16 @@
 /** @module handlers/app/auth */
 
-import { Router as createRouter, type Request, type Response } from "express";
+import { type Request, type Response, type NextFunction } from "express";
+import { FieldValue, getFirestore, type Transaction } from "firebase-admin/firestore"
+import { getAuth, type UserRecord } from "firebase-admin/auth"
 
 import { UserRole } from "apx/types"
 
-import { verifyIdToken } from "../../utils/app/auth"
+import { verifyIdToken, verifyAppCheck, setContext } from "../../utils/app/auth"
 import { MERGE_DOC, reportError, shardDoc } from "../../utils/vtu"
 import { OrderConv, StatConv, UserConv, WalletConv } from "../../utils/vtu/convs"
 
-export const AuthWare = async (r, res, runNext) => {
+export const AppAuth = async (r: Request, res: Response, runNext: NextFunction) => {
 	const [, pathName] = r.path.split("/", 2)
 	if (pathName === "auth") {
 		runNext()
@@ -115,7 +117,8 @@ export const SignUp = async (r: Request, res: Response) => {
 	}
 }
 
-export const ClearUser = async (r, res, runNext) => {
+export const ClearUser = async (r: Request, res: Response) => {
+	const user: any = {}
 	try {
 		const firestore = getFirestore()
 		const userRef = firestore.collection("users").doc(user.uid).withConverter(UserConv)

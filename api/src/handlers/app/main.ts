@@ -1,3 +1,5 @@
+/** @module handlers/app/main */
+
 import { UserRecord, getAuth } from "firebase-admin/auth"
 import { FieldValue, getFirestore } from "firebase-admin/firestore"
 import { HttpsError } from "firebase-functions/v2/https"

@@ -6,33 +6,54 @@ import { getTransaction, putTransaction } from "../../utils/recents"
 import { verifyByNIN, verifyByVNIN, verifyByBVN, verifyByPhone } from "../../utils/idv/verify"
 import { saveFilesLocal } from "../../utils/cache"
 
-export const handleVerifyNIN = async (auth: AuthData, data: object): Promise<string> => {
+export const handleVerifyNIN = async (auth: AuthData, data: object) => {
 	let { paramType, paramValue } = data as Record<string, string>
-	paramType = String(paramType).trim().substring(10)
-	paramValue = String(paramValue).trim().substring(0, paramType === "vnin" ? 16 : 11)
+	paramType = String(paramType).trim()
+	paramValue = String(paramValue).trim()
 	let details: NINDetails
-	if (paramType === "vnin") {
-		details = await verifyByVNIN(paramValue)
-	} else if (paramType === "phone") {
-		details = await verifyByPhone(paramValue)
-	} else {
-		details = await verifyByNIN(paramValue)
+	switch (paramType) {
+		case "vnin":
+			details = await verifyByVNIN(paramValue)
+			break
+		case "nin":
+			if (paramValue.startsWith("0"))
+				return null
+			details = await verifyByNIN(paramValue)
+			break
+		case "phone":
+			if (!paramValue.startsWith("0"))
+				return null
+			details = await verifyByPhone(paramValue)
+			break
+		default:
+			return null
 	}
 	details = await saveFilesLocal(details)
-	return await putTransaction(details)
+	return {
+		transactionId: await putTransaction(details)
+	}
 }
 
-export const handleVerifyBVN = async (auth: AuthData, data: object): Promise<string> => {
+export const handleVerifyBVN = async (auth: AuthData, data: object) => {
 	let { paramType, paramValue } = data as Record<string, string>
-	paramType = String(paramType).trim().substring(10)
-	paramValue = String(paramValue).trim().substring(0, paramType === "phone" ? 11 : 10)
+	paramType = String(paramType).trim()
+	paramValue = String(paramValue).trim()
 	if (paramType === "bvn" && paramValue.length !== 11)
 		throw new Error("invalid bvn number provided")
-	let details: BVNDetails | object
-	if (paramType === "phone") {
-		details = await verifyByBVN("azure", paramValue)
-	} else {
-		details = await verifyByBVN("azure", paramValue)
+	let details: BVNDetails
+	switch (paramType) {
+		case "bvn":
+			if (paramValue.startsWith("0"))
+				return null
+			details = await verifyByBVN("seamfix", paramValue)
+			break
+		case "phone":
+			if (!paramValue.startsWith("0"))
+				return null
+			details = await verifyByBVN("seamfix", paramValue)
+			break
+		default:
+			return null
 	}
 	return await putTransaction(details)
 }

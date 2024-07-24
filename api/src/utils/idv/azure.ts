@@ -23,7 +23,7 @@ const verifyBVN = async (bvnNumber: string) => {
 		bvn: bvnNumber
 	}).catch(handleErr)
 	if (!data || data.error !== undefined)
-		throw new Error(data.error)
+		throw new Error(data?.error || "unknown error")
 	return {
 		firstName: data.firstName,
 		middleName: data.middleName,

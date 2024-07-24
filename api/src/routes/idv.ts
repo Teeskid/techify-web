@@ -13,6 +13,13 @@ idv.get("/verify-bvn", async (r, res) => {
 	try {
 		const { ...options } = Object.assign({}, r.query, r.body)
 		const transactionId = await handleVerifyBVN({} as AuthData, options)
+		if (transactionId === null) {
+			res.json({
+				code: 400,
+				text: "details not found"
+			})
+			return
+		}
 		res.json({
 			code: 200,
 			data: transactionId
@@ -29,10 +36,17 @@ idv.get("/verify-bvn", async (r, res) => {
 idv.all("/verify-nin", async (r, res) => {
 	try {
 		const { ...options } = Object.assign({}, r.query, r.body)
-		const transactionId = await handleVerifyNIN({} as AuthData, options)
+		const data = await handleVerifyNIN({} as AuthData, options)
+		if (data === null) {
+			res.json({
+				code: 400,
+				text: "details not found"
+			})
+			return
+		}
 		res.json({
 			code: 200,
-			data: { transactionId }
+			data
 		})
 	} catch (error: Error | unknown) {
 		console.error("IDV-NIN", error)
@@ -40,6 +54,17 @@ idv.all("/verify-nin", async (r, res) => {
 			code: 500,
 			text: (error as Error).message
 		})
+	}
+})
+
+idv.get("/view-result", async (r, res) => {
+	const { ...options } = Object.assign({}, r.query)
+	try {
+		const { viewId, result } = await handleViewResult({} as AuthData, options)
+		res.render(viewId, result)
+	} catch (error: Error | unknown) {
+		console.error("IDV-RES", error)
+		res.sendStatus(500)
 	}
 })
 
@@ -55,18 +80,7 @@ idv.get("/view-media", async (r, res) => {
     }
 })
 
-idv.get("/view-result", async (r, res) => {
-	const { ...options } = Object.assign({}, r.query)
-	try {
-		const { viewId, result } = await handleViewResult({} as AuthData, options)
-		res.render(viewId, result)
-	} catch (error: Error | unknown) {
-		console.error("IDV-RES", error)
-		res.sendStatus(500)
-	}
-})
-
-idv.get("/clear-cache", async () => {
+idv.get("/clear-cache", async (r, res) => {
 	try {
 		const done = await clearCache(100)
 		if (done)

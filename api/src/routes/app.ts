@@ -2,11 +2,11 @@
 
 import { Router as  createRouter } from "express"
 
-import { SignIn, SignUp, ClearUser } from "../handlers/app/auth"
+import { AppAuth, SignIn, SignUp, ClearUser } from "../handlers/app/auth"
 
 const app = createRouter()
 
-app.use(AuthWare)
+app.use(AppAuth)
 
 app.post("/auth/sign-in", SignIn)
 app.post("/auth/sign-up", SignUp)

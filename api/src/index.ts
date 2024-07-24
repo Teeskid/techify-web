@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 import parser from "body-parser";
 import cors from "cors";
 import express from "express";

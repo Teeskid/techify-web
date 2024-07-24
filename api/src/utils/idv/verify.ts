@@ -4,24 +4,24 @@ import type { BVNDetails, NINDetails } from "../../types/idv"
 import azure from "./azure"
 import seamfix from "./seamfix"
 
-export const verifyByNIN = async (ninNumber: string): Promise<NINDetails> => (
-	await seamfix.verifyNIN(ninNumber) as NINDetails
+export const verifyByNIN = async (paramValue: string): Promise<NINDetails> => (
+	await seamfix.verifyNIN(paramValue) as NINDetails
 )
 
-export const verifyByVNIN = async (ninNumber: string): Promise<NINDetails> => (
-	await seamfix.verifyVNIN(ninNumber)
+export const verifyByVNIN = async (paramValue: string): Promise<NINDetails> => (
+	await seamfix.verifyVNIN(paramValue)
 )
 
-export const verifyByPhone = async (phoneNumber: string): Promise<NINDetails> => (
-	await seamfix.verifyPNIN(phoneNumber)
+export const verifyByPhone = async (paramValue: string): Promise<NINDetails> => (
+	await seamfix.verifyPNIN(paramValue)
 )
 
-export const verifyByBVN = async (index: string, bvnNumber: string): Promise<BVNDetails> => {
+export const verifyByBVN = async (index: string, paramValue: string): Promise<BVNDetails> => {
 	let data: BVNDetails
 	if (index === "seamfix")
-		data = await seamfix.verifyBVN(bvnNumber)
+		data = await seamfix.verifyBVN2(paramValue)
 	else
-		data = await azure.verifyBVN(bvnNumber)
+		data = await azure.verifyBVN(paramValue)
 	return data
 }
 

@@ -20,7 +20,7 @@ initializeApp({
 
 const app = express()
 app.set("view engine", "ejs")
-app.set("views", path.resolve(__dirname, "./views"))
+app.set("views", path.resolve(__dirname, "../views"))
 app.use(parser.json())
 app.use(parser.urlencoded({ extended: false }))
 app.use(cors({ origin: true }))

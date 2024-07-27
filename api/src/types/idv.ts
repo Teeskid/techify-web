@@ -7,17 +7,15 @@ export interface NINDetails {
     address: {
         stateName: string,
         localGovt: string,
-        lineTwo: string
+        lineOne: string
     },
     gender: "M" | "F",
-    trackingId: string,
     userId: string,
     photoData: string,
     issueDate: string,
     ninNumber: string,
+    trackingId: string,
     vNinNumber: string,
 }
-export type BVNDetails = Record<string, string>
-export interface Server {
 
-}
+export type BVNDetails = Record<string, string>

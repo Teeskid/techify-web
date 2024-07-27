@@ -2,39 +2,10 @@
 
 import { AuthData } from "../../types/app"
 import type { BVNDetails, NINDetails } from "../../types/idv"
-import { getTransaction, putTransaction } from "../../utils/recents"
+import { getTransaction, listTransactions, putTransaction, clearTransactions } from "../../utils/recents"
 import { verifyByNIN, verifyByVNIN, verifyByBVN, verifyByPhone } from "../../utils/idv/verify"
-import { saveFilesLocal } from "../../utils/cache"
 
-export const handleVerifyNIN = async (auth: AuthData, data: object) => {
-	let { paramType, paramValue } = data as Record<string, string>
-	paramType = String(paramType).trim()
-	paramValue = String(paramValue).trim()
-	let details: NINDetails
-	switch (paramType) {
-		case "vnin":
-			details = await verifyByVNIN(paramValue)
-			break
-		case "nin":
-			if (paramValue.startsWith("0"))
-				return null
-			details = await verifyByNIN(paramValue)
-			break
-		case "phone":
-			if (!paramValue.startsWith("0"))
-				return null
-			details = await verifyByPhone(paramValue)
-			break
-		default:
-			return null
-	}
-	details = await saveFilesLocal(details)
-	return {
-		transactionId: await putTransaction(details)
-	}
-}
-
-export const handleVerifyBVN = async (auth: AuthData, data: object) => {
+export const VerifyBVN = async (auth: AuthData, data: object) => {
 	let { paramType, paramValue } = data as Record<string, string>
 	paramType = String(paramType).trim()
 	paramValue = String(paramValue).trim()
@@ -55,29 +26,75 @@ export const handleVerifyBVN = async (auth: AuthData, data: object) => {
 		default:
 			return null
 	}
-	return await putTransaction(details)
+	return {
+		ref: await putTransaction(details),
+		res: details
+	}
 }
 
-export const handleViewResult = async (auth: AuthData, data: object) => {
-	let { transactionId, viewFormat } = data as Record<string, string>
+export const VerifyNIN = async (auth: AuthData, data: object) => {
+	let { paramType, paramValue } = data as Record<string, string>
+	paramType = String(paramType).trim()
+	paramValue = String(paramValue).trim()
+	let details: NINDetails
+	switch (paramType) {
+		case "nin":
+			if (paramValue.startsWith("0"))
+				return null
+			details = await verifyByNIN(paramValue)
+			break
+		case "vnin":
+			details = await verifyByVNIN(paramValue)
+			break
+		case "phone":
+			if (!paramValue.startsWith("0"))
+				return null
+			details = await verifyByPhone(paramValue)
+			break
+		default:
+			return null
+	}
+	return {
+		ref: await putTransaction(details),
+		res: details
+	}
+}
+
+export const ViewRecents = async (auth: AuthData, data: object) => {
+	let { page } = data as Record<string, string | number>
+	page = Number.parseInt(page as string)
+	if (page)
+		throw new Error("invalid paging provided")
+	return await listTransactions()
+}
+
+export const ClearRecents = async (auth: AuthData, data: object) => {
+	await clearTransactions()
+}
+
+export const ViewResult = async (auth: AuthData, data: object) => {
+	let { ref, dsp } = data as Record<string, string>
 	// find the suitable view
+	let result: object = await getTransaction(ref)
+	if (result === null)
+		return null
 	let viewId: string
-	let result: object = await getTransaction(transactionId)
-	if (viewFormat === "normal")
+	if (dsp === "normal")
 		viewId = "nin-normal"
-	else if (viewFormat === "standard")
+	else if (dsp === "standard")
 		viewId = "nin-standard"
-	else if (viewFormat === "premium")
+	else if (dsp === "premium")
 		viewId = "nin-premium"
 	else {
 		viewId = "../../raw-data"
 		result = { data: result }
 	}
 	// form and return results
-	viewId = `prints/idv/${viewId}`
+	viewId = `prints/idv/${dsp}`
 	return {
-		viewId,
-		result
+		ref,
+		res: result,
+		vid: viewId,
 	}
 }
 

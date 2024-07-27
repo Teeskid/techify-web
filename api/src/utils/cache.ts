@@ -2,11 +2,17 @@
 
 import { getFirestore } from "firebase-admin/firestore"
 import { getDownloadURL, getStorage } from "firebase-admin/storage"
-import QRCode from "qrcode"
 
-import type { NINDetails, BVNDetails } from "../types/idv"
+export const cacheFileData = async (key: string, data: any): Promise<string> => {
+    const bucket = getStorage().bucket()
+    // save photo as a file
+    const handle = bucket.file(`cache/${key}`)
+    await handle.save(data)
+    // return a re-assigned object
+    return await getDownloadURL(handle)
+}
 
-export const cacheRequest = async (r: string, data: object) => {
+export const cacheRequest = async (r: string, data: Record<string, any>): Promise<void> => {
 	await getFirestore().collection("data").doc().create({
 		arg: r,
 		ext: data,
@@ -14,7 +20,7 @@ export const cacheRequest = async (r: string, data: object) => {
 	})
 }
 
-export const requestCache = async (r: string) => {
+export const requestCache = async (r: string) : Promise<object | null> => {
 	const store = getFirestore()
 	const cache = await store.collection("data").where("arg", "==", r).select("ext").limit(1).get()
 	if (!cache.empty)
@@ -38,36 +44,6 @@ export const clearCache = async (limit: number = 100) => {
 		return false
 	await cache.docs.forEach((doc) => doc.ref.delete())
 	return true
-}
-
-export const savePhotoLocal = async (data: NINDetails | BVNDetails): Promise<object> => {
-    const bucket = getStorage().bucket()
-    // save photo as a file
-    const photoData = bucket.file(`cache/${data.ninNumber}.jpg`)
-    await photoData.save(Buffer.from(data.photoData, "base64"))
-    // return a re-assigned object
-    return Object.assign(data, {
-        photoData: await getDownloadURL(photoData),
-    })
-}
-
-export const saveFilesLocal = async (data: NINDetails): Promise<NINDetails> => {
-    const bucket = getStorage().bucket()
-    // save photo as a file
-    const photoData = bucket.file(`cache/${data.ninNumber}.jpg`)
-    await photoData.save(Buffer.from(data.photoData, "base64"))
-    // save qr code as a file
-    const qrCodeData = bucket.file(`cache/${data.ninNumber}-qr.png`)
-    await qrCodeData.save(await QRCode.toBuffer(`${data.firstName} ${data.middleName || "\b"} ${data.lastName} | NIN: ${data.ninNumber}`, {
-        margin: 0,
-        maskPattern: 1,
-        type: "png",
-    }))
-    // return a re-assigned object
-    return Object.assign(data, {
-        photoData: await getDownloadURL(photoData),
-        qrCodeData: await getDownloadURL(qrCodeData)
-    })
 }
 
 export default {}

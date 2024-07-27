@@ -9,7 +9,7 @@ import type { Order, UserRole } from "apx/types"
 
 import { chargeWallet as _chargeWallet } from "../../apx-library/internal/users"
 import { OrderConv, UserConv, WalletConv } from "../../apx-utility/convs"
-import { MERGE_DOC } from "../../apx-utility/utils"
+import { MERGE_DOC } from "../../utils/vtu"
 
 type UserInfo = Partial<UserRecord & { creationTime: string }>
 

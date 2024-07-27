@@ -33,11 +33,11 @@ const convertNINData = (ninNumber: string, raw: any): NINDetails => {
 		address: {
 			stateName: "",
 			localGovt: "",
-			lineTwo: ""
+			lineOne: ""
 		},
 		trackingId: "",
 		phoneNumber: raw.trustedNumber || "",
-		gender: raw.gender?.substring(1) || "",
+		gender: raw.gender?.substring(0, 1) || "",
 		userId: raw.userid || "",
 		photoData: raw.photo,
 		issueDate: formatDate(raw.ts) || "",
@@ -54,16 +54,16 @@ const convertNINData2 = (ninNumber: string, raw: any): NINDetails => {
 		middleName: raw.middlename || "",
 		dateOfBirth: formatDate(raw.birthdate)  || "",
 		address: {
-			stateName: raw.self_origin_state || "",
-			localGovt: raw.self_origin_lga || "",
-			lineTwo: raw.residenceAdressLine1 || ""
+			stateName: raw.residenceState || "",
+			localGovt: raw.residenceLga || "",
+			lineOne: raw.residenceAdressLine1 || ""
 		},
 		trackingId: "",
 		phoneNumber: raw.telephoneno || "",
-		gender: raw.gender?.substring(1) || "",
+		gender: raw.gender?.substring(0, 1) || "",
 		userId: raw.userid || "",
 		photoData: raw.photo,
-		issueDate: formatDate(raw.ts) || "",
+		issueDate: formatDate(new Date().toString()),
 		vNinNumber: raw.vNIN || "",
 		ninNumber: raw.nin || ninNumber
 	}
@@ -104,21 +104,23 @@ const isInValid = (data: any): boolean => {
 	return false
 }
 
+const request = (paramType: string, paramValue: string, paramAuth: string) => (
+	seamFix.post("/", {
+		"countryCode": "NG",
+		"searchParameter": paramValue || "SF895332826955L0",
+		"verificationType":paramType,
+		"transactionReference": requestRef()
+	}, {
+		headers: {
+			"apiKey": paramAuth,
+		}
+	}).catch(handleErr)
+)
+
 const verifyVNIN = async (paramValue: string) => {
 	let data: Record<string, any> | null = await requestCache(paramValue)
 	if (data === null) {
-		data = (
-			await seamFix.post("/", {
-				"countryCode": "NG",
-				"searchParameter": paramValue || "SF895332826955L0",
-				"verificationType": "V-NIN",
-				"transactionReference": requestRef()
-			}, {
-				headers: {
-					"apiKey": ninKey1,
-				}
-			}).catch(handleErr)
-		).data as Record<string, any>
+		data = (await request("V-NIN", paramValue || "SF895332826955L0", ninKey1)).data as Record<string, any>
 		// cache only valid
 		if (!isInValid(data))
 			await cacheRequest(paramValue, data)
@@ -134,24 +136,14 @@ const verifyVNIN = async (paramValue: string) => {
 const verifyNIN = async (paramValue: string): Promise<NINDetails> => {
 	let data: Record<string, any> | null = await requestCache(paramValue)
 	if (data === null) {
-		data = (
-			await seamFix.post("/", {
-				"verificationType": "NIN-VERIFY",
-				"searchParameter": paramValue || "02730846093",
-				"countryCode": "NG",
-				"transactionReference": requestRef()
-			}, {
-				headers: {
-					"apiKey": ninKey2,
-				}
-			}).catch(handleErr)
-		).data as Record<string, any>
-		// cache only valid
+		data = (await request("NIN-VERIFY", paramValue || "SF895332826955L0", ninKey2)).data as Record<string, any>
+		// cache only valid data
 		if (!isInValid(data))
 			await cacheRequest(paramValue, data)
 	} else {
 		if (isInValid(data))
 			await removeCache(paramValue)
+		console.log(data)
 	}
 	if (isInValid(data))
 		throw new Error(data.description)

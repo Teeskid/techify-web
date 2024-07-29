@@ -1,3 +1,5 @@
+/** @module index */
+
 import parser from "body-parser";
 import cors from "cors";
 import express from "express";
@@ -11,6 +13,7 @@ process.on("SIGINT", () => {
 	process.kill(process.pid)
 })
 
+// configure firebase things
 initializeApp({
 	credential: applicationDefault(),
 	projectId: "techify-ng",

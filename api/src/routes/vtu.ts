@@ -1,8 +1,12 @@
+/** @module routes/vtu */
+
 import { Router as createRouter, type Request, type Response } from "express";
 
-import { updateOrder } from "../../utils/vtu/order";
+import { updateOrder } from "../utils/vtu/order";
 
-const vtu = createRouter();
+const vtu = createRouter()
+
+// users-routes up here
 
 /**
  * Web Hook For Product V1 API
@@ -10,7 +14,7 @@ const vtu = createRouter();
  * @param {Response} res
  * @return {Promise<void>}
  */
-vtu.all('/maskawasub', async (req: Request, res: Response): Promise<void> => {
+vtu.all('/hooks/maskawasub', async (req: Request, res: Response): Promise<void> => {
 	// respond early
 	res.sendStatus(200)
 	
@@ -30,7 +34,7 @@ vtu.all('/maskawasub', async (req: Request, res: Response): Promise<void> => {
  * @param {Response} res
  * @return {Promise<void>}
  */
-vtu.all('/bilalsadasub', async (req: Request, res: Response): Promise<void> => {
+vtu.all('/hooks/bilalsadasub', async (req: Request, res: Response): Promise<void> => {
 	// respond early
 	res.sendStatus(200)
 

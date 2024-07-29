@@ -1,9 +1,11 @@
+/** @module handlers/app/user */
+
 import { getFirestore, Timestamp } from "firebase-admin/firestore"
 
 import type { Context } from "../../types/app";
 import type { Bank, UserType } from "apx/types"
 
-import { AuthData } from "../../types/app"
+import type { AuthData } from "../../types/app"
 import { MERGE_DOC, isValidBank, isValidEmail, isValidName, isValidNuban, isValidPhone } from "../../utils/vtu"
 import { BankConv, UserConv, WalletConv } from "../../utils/vtu/convs"
 import { changePIN, updateCore } from "../../handlers/app/user";

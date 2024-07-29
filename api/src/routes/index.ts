@@ -1,3 +1,5 @@
+/** @module routes/index */
+
 import { Router as createRouter } from "express";
 
 import app from "./app";
@@ -9,8 +11,11 @@ import vtu from "./vtu";
 
 const routes = createRouter()
 
-routes.get("/", async (r, res) => {
-    res.redirect("https://docs.techify.ng")
+routes.all("/", (r, res) => {
+    res.json({
+		code: 400,
+		text: "route not found on server"
+	})
 })
 routes.use("/app-v1", app)
 routes.use("/idv-v1", idv)

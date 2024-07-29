@@ -1,14 +1,148 @@
-/** @module routes/app/hooks/sim */
+/** @module routes/sim */
 
 import axios from "axios";
 import { Router as createRouter, type Request, type Response } from "express";
-import { getFirestore } from "firebase-admin/firestore";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
+import { getMessaging } from "firebase-admin/messaging";
+import { randomBytes } from "crypto";
 
-import { UssdCallback, UssdRequest } from "../../types/sim";
+import { UssdCallback, UssdRequest } from "../types/sim";
+import { postUssd } from "../utils/sim/client";
+import { verifyIdToken } from "../utils/app/auth";
+
+const sim = createRouter()
+
+sim.route("/client/ussd").get((r, res) => {
+    res.sendStatus(200)
+}).post(async (r, res) => {
+    /**
+     * for running ussd code in (a)sync
+     */
+    try {
+        await postUssd("token", "*310#", false)
+        res.json({ code: 200, text: "USSD Code sent for processing on the server." })
+    } catch (error: Error | unknown) {
+        res.json({ code: 500, text: (error as Error).message })
+    }
+})
 
 /**
- * Ussd Steps Integers
+ * TODO: register server for a user id
  */
+sim.post("/auth", async (r, res) => {
+	const context = await verifyIdToken(r, res)
+	if (!context) {
+		return
+	}
+	console.log(context)
+
+	const token = String(r.body.token).trim()
+	const title = String(r.body.title).trim()
+	if ((!token || token.length === 0) || (!title || title.length === 0)) {
+		res.json({
+			code: 403,
+			text: "invalid title / registration token provided"
+		})
+		return
+	}
+
+	const store = getFirestore()
+	const devDoc = store.collection("usrs").doc(context.uid).collection("devs").doc()
+	const codeId = randomBytes(999999).toString("hex")
+	const devRes = await devDoc.create({
+		nam: title,
+		uid: token,
+		cod: codeId,
+		dat: Timestamp.now(),
+		stt: null
+	})
+
+	res.json({
+		code: 200,
+		text: "device authentication successful",
+		data: {
+			cod: 0,
+			uid: devDoc.id,
+			dat: devRes.writeTime
+		}
+	})
+})
+
+/**
+ * TODO: used to toggle server on / off
+ */
+sim.post("/power", async (r, res) => {
+	const context = await verifyIdToken(r, res)
+	if (!context) {
+		return
+	}
+
+	const token = String(r.body.token).trim()
+	if (!token || token.length === 0) {
+		res.json({
+			code: 403,
+			text: "invalid registration token provided"
+		})
+		return
+	}
+
+	const subs = await getMessaging().subscribeToTopic(token, "sim-service")
+	if (subs.failureCount !== 0) {
+		res.json({
+			code: 500,
+			text: "failed to subscribe to sim service"
+		})
+		return
+	}
+	res.json({
+		code: 200,
+		text: "subscribed to sim service successfully"
+	})
+
+	console.log("AUTH: ", context)
+})
+
+sim.get("/status", (r, res) => {
+	res.sendStatus(200)
+})
+
+sim.route("/sms").get((r, res) => {
+	const data: object[] = []
+
+	// return the json data
+	res.json({
+		data: data
+	})
+}).post((r, res) => {
+	// request to send sms via the server
+	res.sendStatus(200)
+
+	const { recipent, message, retry } = r.body
+
+	console.error("UNIMPLEMENTED")
+
+	res.json({
+		recipent,
+		message,
+		retry
+	})
+})
+
+sim.route("/ussd").get((r, res) => {
+	const data: object[] = []
+
+	// return the json data
+	res.json({
+		data: data
+	})
+}).post((r, res) => {
+	res.sendStatus(200)
+})
+
+/**
+ * sim-hooks
+ */
+// ssd Steps Integers
 const STEP_REDEEMS = 0
 const STEP_ENTERED = 1
 const STEP_SUCCESS = 2
@@ -20,8 +154,6 @@ const MATCH_ENTIRE = /^\*384\*000\*\d{12}#$/ig
 
 // Hold States In Memory
 const SESSN_LOGGER: Record<string, number> = {}
-
-const sim = createRouter()
 
 sim.get("/", (r, res) => {
 	// stub route test

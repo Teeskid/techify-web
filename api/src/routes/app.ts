@@ -2,12 +2,13 @@
 
 import { Router as  createRouter } from "express"
 
-import { AppAuth, SignIn, SignUp, ClearUser } from "../handlers/app/auth"
+import { AuthMiddleWare, SignIn, SignUp, ClearUser } from "../handlers/app/auth"
 import { ClearCache } from "../handlers/app/misc"
 
 const app = createRouter()
 
-app.use(AppAuth)
+// makes sure that auth headers are where required
+app.use(AuthMiddleWare)
 
 app.post("/auth/sign-in", SignIn)
 app.post("/auth/sign-up", SignUp)

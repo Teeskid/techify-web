@@ -13,8 +13,8 @@ const routes = createRouter()
 
 routes.all("/", (r, res) => {
     res.json({
-		code: 400,
-		text: "route not found on server"
+		code: 500,
+		text: "internal server error"
 	})
 })
 routes.use("/app-v1", app)

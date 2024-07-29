@@ -12,9 +12,9 @@ import type { AppToken, AuthData, Context } from "../../types/app";
  * @return {Promise<AuthData | null>}
  */
 export const verifyIdToken = async (r: Request, res?: Response): Promise<AuthData | null> => {
-    const rawToken = String(r.get("authorization")).split(" ", 2)[1]
+    const rawToken = String(r.get("authorization")).trim().split(" ", 2)[1]
     try {
-        if (!rawToken || rawToken.length === 0) {
+        if (!rawToken) {
             if (res) {
                 res.json({
                     code: 403,

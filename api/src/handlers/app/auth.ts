@@ -10,14 +10,16 @@ import { verifyIdToken, verifyAppCheck, setContext } from "../../utils/app/auth"
 import { MERGE_DOC, reportError, shardDoc } from "../../utils/vtu"
 import { OrderConv, StatConv, UserConv, WalletConv } from "../../utils/vtu/convs"
 
-export const AppAuth = async (r: Request, res: Response, runNext: NextFunction) => {
+export const AuthMiddleWare = async (r: Request, res: Response, runNext: NextFunction) => {
+	// extract the path name
 	const [, pathName] = r.path.split("/", 2)
+	// skip auth for auth path
 	if (pathName === "auth") {
 		runNext()
 		return
 	}
-	const appToken = await verifyAppCheck(r)
-	const authToken = await verifyIdToken(r)
+	const appToken = await verifyAppCheck(r, res)
+	const authToken = await verifyIdToken(r, res)
 	setContext(r, appToken, authToken)
 	// if (r.path.includes("/admin") || r.path.includes("/users")) {
 	// 	if (!appToken || !authToken) {

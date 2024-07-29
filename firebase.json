@@ -1,113 +1,69 @@
 {
-	"database": {
-		"rules": "database.json"
-	},
-	"firestore": {
-		"rules": "firestore.rules",
-		"indexes": "firestore.json"
-	},
-	"functions": [
-		{
-			"source": "api",
-			"codebase": "default",
-			"ignore": [
-				"venv",
-				".git",
-				"firebase-debug.log",
-				"firebase-debug.*.log"
-			]
-		}
-	],
-	"hosting": [
-		{
-			"site": "techify-ng",
-			"public": "app/build",
-			"ignore": [
-				"api/**",
-				"apx/**",
-				"*.md",
-				"*.json",
-				"*.rules",
-				"firebase.json",
-				"**/.*",
-				"**/node_modules/**"
-			],
-			"headers": [
-				{
-					"source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
-					"headers": [
-						{
-							"key": "Access-Control-Allow-Origin",
-							"value": "*"
-						}
-					]
-				},
-				{
-					"source": "404.html",
-					"headers": [
-						{
-							"key": "Cache-Control",
-							"value": "max-age=300"
-						}
-					]
-				},
-				{
-					"source": "**/*.@(jpg|jpeg|gif|png)",
-					"headers": [
-						{
-							"key": "Cache-Control",
-							"value": "max-age=7200"
-						}
-					]
-				}
-			],
-			"rewrites": [
-				{
-					"source": "/foo/**",
-					"destination": "/index.html"
-				}
-			],
-			"redirects": [
-				{
-					"source": "**",
-					"destination": "https://google.com",
-					"type": 302
-				}
-			]
-		}
-	],
-	"storage": {
-		"rules": "storage.rules"
-	},
-	"emulators": {
-		"auth": {
-			"port": 9099
-		},
-		"functions": {
-			"port": 5001
-		},
-		"firestore": {
-			"port": 8080
-		},
-		"database": {
-			"port": 9000
-		},
-		"hosting": {
-			"port": 5000
-		},
-		"pubsub": {
-			"port": 8085
-		},
-		"storage": {
-			"port": 9199
-		},
-		"ui": {
-			"enabled": true
-		},
-		"singleProjectMode": true
-	},
-	"remoteconfig": {
-		"template": "remoteconfig.json"
-	},
-	"extensions": {}
+  "database": {
+    "rules": "database.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.json"
+  },
+  "functions": [
+    {
+      "source": "api",
+      "codebase": "default",
+      "ignore": [
+        "venv",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ],
+  "hosting": {
+    "public": "web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "database": {
+      "port": 9000
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "pubsub": {
+      "port": 8085
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.json"
+  },
+  "extensions": {}
 }

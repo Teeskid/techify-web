@@ -103,6 +103,7 @@ idv.get("/view-result", async (r, res) => {
 		}
 		res.render(data.vid, data.res)
 	} catch (error: Error | unknown) {
+		console.error(error)
 		res.sendStatus(500)
 	}
 })

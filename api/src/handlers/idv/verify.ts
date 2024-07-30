@@ -74,6 +74,8 @@ export const ClearRecents = async (auth: AuthData, data: object) => {
 
 export const ViewResult = async (auth: AuthData, data: object) => {
 	let { ref, dsp } = data as Record<string, string>
+	if (!ref)
+		return null
 	// find the suitable view
 	let result: object = await getTransaction(ref)
 	if (result === null)
